@@ -1,0 +1,263 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\workspace\\LRSCard.CurrencyService\\src\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.api\\validations\\currencycodevalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|solutionrelative:lrscard.currencyservice.api\\validations\\currencycodevalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{65631F1E-C8F9-4FEF-8CE9-17990F2A9D42}|LRSCard.CurrencyService.Infrastructure\\LRSCard.CurrencyService.Infrastructure.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.infrastructure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{65631F1E-C8F9-4FEF-8CE9-17990F2A9D42}|LRSCard.CurrencyService.Infrastructure\\LRSCard.CurrencyService.Infrastructure.csproj|solutionrelative:lrscard.currencyservice.infrastructure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{617B6C53-AF36-469E-9532-004957D27FBB}|LRSCard.CurrencyService.Application\\LRSCard.CurrencyService.Application.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.application\\currencyexchangerateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{617B6C53-AF36-469E-9532-004957D27FBB}|LRSCard.CurrencyService.Application\\LRSCard.CurrencyService.Application.csproj|solutionrelative:lrscard.currencyservice.application\\currencyexchangerateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{617B6C53-AF36-469E-9532-004957D27FBB}|LRSCard.CurrencyService.Application\\LRSCard.CurrencyService.Application.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.application\\options\\currencyrulesoptions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{617B6C53-AF36-469E-9532-004957D27FBB}|LRSCard.CurrencyService.Application\\LRSCard.CurrencyService.Application.csproj|solutionrelative:lrscard.currencyservice.application\\options\\currencyrulesoptions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{617B6C53-AF36-469E-9532-004957D27FBB}|LRSCard.CurrencyService.Application\\LRSCard.CurrencyService.Application.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.application\\interfaces\\icurrencyexchangerateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{617B6C53-AF36-469E-9532-004957D27FBB}|LRSCard.CurrencyService.Application\\LRSCard.CurrencyService.Application.csproj|solutionrelative:lrscard.currencyservice.application\\interfaces\\icurrencyexchangerateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{617B6C53-AF36-469E-9532-004957D27FBB}|LRSCard.CurrencyService.Application\\LRSCard.CurrencyService.Application.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.application\\common\\pagination.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{617B6C53-AF36-469E-9532-004957D27FBB}|LRSCard.CurrencyService.Application\\LRSCard.CurrencyService.Application.csproj|solutionrelative:lrscard.currencyservice.application\\common\\pagination.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{617B6C53-AF36-469E-9532-004957D27FBB}|LRSCard.CurrencyService.Application\\LRSCard.CurrencyService.Application.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.application\\common\\paginationresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{617B6C53-AF36-469E-9532-004957D27FBB}|LRSCard.CurrencyService.Application\\LRSCard.CurrencyService.Application.csproj|solutionrelative:lrscard.currencyservice.application\\common\\paginationresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|solutionrelative:lrscard.currencyservice.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|solutionrelative:lrscard.currencyservice.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.api\\controllers\\exchangeratecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|solutionrelative:lrscard.currencyservice.api\\controllers\\exchangeratecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.api\\dtos\\requests\\getcurrencyconversionrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|solutionrelative:lrscard.currencyservice.api\\dtos\\requests\\getcurrencyconversionrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.api\\dtos\\responses\\currencyratesdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|solutionrelative:lrscard.currencyservice.api\\dtos\\responses\\currencyratesdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.api\\dtos\\requests\\getlastestcurrencyrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399E89AF-E6BA-A292-AB76-784C0E56DC7F}|LRSCard.CurrencyService.API\\LRSCard.CurrencyService.API.csproj|solutionrelative:lrscard.currencyservice.api\\dtos\\requests\\getlastestcurrencyrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B6DFF607-503A-47B6-8A99-AD2BB3FB937B}|LRSCard.CurrencyService.Domain\\LRSCard.CurrencyService.Domain.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.domain\\currencyrates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B6DFF607-503A-47B6-8A99-AD2BB3FB937B}|LRSCard.CurrencyService.Domain\\LRSCard.CurrencyService.Domain.csproj|solutionrelative:lrscard.currencyservice.domain\\currencyrates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{617B6C53-AF36-469E-9532-004957D27FBB}|LRSCard.CurrencyService.Application\\LRSCard.CurrencyService.Application.csproj|c:\\workspace\\lrscard.currencyservice\\src\\lrscard.currencyservice.application\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{617B6C53-AF36-469E-9532-004957D27FBB}|LRSCard.CurrencyService.Application\\LRSCard.CurrencyService.Application.csproj|solutionrelative:lrscard.currencyservice.application\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\Program.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.API\\Program.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\Program.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.API\\Program.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAADwvxYAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T16:36:52.229Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "DependencyInjection.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Application\\DependencyInjection.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.Application\\DependencyInjection.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Application\\DependencyInjection.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.Application\\DependencyInjection.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T16:31:28.973Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CurrencyCodeValidator.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\Validations\\CurrencyCodeValidator.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.API\\Validations\\CurrencyCodeValidator.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\Validations\\CurrencyCodeValidator.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.API\\Validations\\CurrencyCodeValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T17:38:37.871Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DependencyInjection.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Infrastructure\\DependencyInjection.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.Infrastructure\\DependencyInjection.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Infrastructure\\DependencyInjection.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.Infrastructure\\DependencyInjection.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAABsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T17:37:47.726Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ICurrencyExchangeRateService.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Application\\Interfaces\\ICurrencyExchangeRateService.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.Application\\Interfaces\\ICurrencyExchangeRateService.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Application\\Interfaces\\ICurrencyExchangeRateService.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.Application\\Interfaces\\ICurrencyExchangeRateService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T17:37:21.147Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PaginationResult.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Application\\Common\\PaginationResult.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.Application\\Common\\PaginationResult.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Application\\Common\\PaginationResult.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.Application\\Common\\PaginationResult.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T17:37:16.816Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Pagination.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Application\\Common\\Pagination.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.Application\\Common\\Pagination.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Application\\Common\\Pagination.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.Application\\Common\\Pagination.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T17:37:15.9Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CurrencyRulesOptions.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Application\\Options\\CurrencyRulesOptions.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.Application\\Options\\CurrencyRulesOptions.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Application\\Options\\CurrencyRulesOptions.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.Application\\Options\\CurrencyRulesOptions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T16:16:32.615Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CurrencyExchangeRateService.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Application\\CurrencyExchangeRateService.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.Application\\CurrencyExchangeRateService.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Application\\CurrencyExchangeRateService.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.Application\\CurrencyExchangeRateService.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAAA0AAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T15:04:25.524Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ExchangeRateController.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\Controllers\\ExchangeRateController.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.API\\Controllers\\ExchangeRateController.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\Controllers\\ExchangeRateController.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.API\\Controllers\\ExchangeRateController.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T17:07:13.276Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "GetLastestCurrencyRequestDTO.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\DTOs\\Requests\\GetLastestCurrencyRequestDTO.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.API\\DTOs\\Requests\\GetLastestCurrencyRequestDTO.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\DTOs\\Requests\\GetLastestCurrencyRequestDTO.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.API\\DTOs\\Requests\\GetLastestCurrencyRequestDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAsAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T13:32:26.403Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "CurrencyRates.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Domain\\CurrencyRates.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.Domain\\CurrencyRates.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.Domain\\CurrencyRates.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.Domain\\CurrencyRates.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T17:17:11.702Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\appsettings.json",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.API\\appsettings.json",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\appsettings.json",
+              "RelativeToolTip": "LRSCard.CurrencyService.API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwA4AAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-11T16:17:01.029Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "GetCurrencyConversionRequestDTO.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\DTOs\\Requests\\GetCurrencyConversionRequestDTO.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.API\\DTOs\\Requests\\GetCurrencyConversionRequestDTO.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\DTOs\\Requests\\GetCurrencyConversionRequestDTO.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.API\\DTOs\\Requests\\GetCurrencyConversionRequestDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T17:19:15.457Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "CurrencyRatesDTO.cs",
+              "DocumentMoniker": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\DTOs\\Responses\\CurrencyRatesDTO.cs",
+              "RelativeDocumentMoniker": "LRSCard.CurrencyService.API\\DTOs\\Responses\\CurrencyRatesDTO.cs",
+              "ToolTip": "C:\\workspace\\LRSCard.CurrencyService\\src\\LRSCard.CurrencyService.API\\DTOs\\Responses\\CurrencyRatesDTO.cs",
+              "RelativeToolTip": "LRSCard.CurrencyService.API\\DTOs\\Responses\\CurrencyRatesDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T17:23:42.053Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

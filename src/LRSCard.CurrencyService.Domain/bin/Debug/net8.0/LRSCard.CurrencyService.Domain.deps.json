@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "LRSCard.CurrencyService.Domain/1.0.0": {
+        "runtime": {
+          "LRSCard.CurrencyService.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "LRSCard.CurrencyService.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

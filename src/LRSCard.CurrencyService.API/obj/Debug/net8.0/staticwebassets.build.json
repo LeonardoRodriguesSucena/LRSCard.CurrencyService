@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "/BZtEPMGqWlvq+jwK5lY2zEGzLjBxg1GCq7xXS0o0os=",
+  "Source": "LRSCard.CurrencyService.API",
+  "BasePath": "_content/LRSCard.CurrencyService.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

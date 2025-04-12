@@ -1,0 +1,6 @@
+@LRSCard.CurrencyService.API_HostAddress = http://localhost:5077
+
+GET {{LRSCard.CurrencyService.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

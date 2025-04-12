@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\LRS.CurrencyService.API.props" />
+</Project>
