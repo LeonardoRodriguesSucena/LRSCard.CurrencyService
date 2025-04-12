@@ -1,4 +1,5 @@
-﻿using LRSCard.CurrencyService.API.DTOs.Requests;
+﻿using LRSCard.CurrencyService.API.DTOs.Common;
+using LRSCard.CurrencyService.API.DTOs.Requests;
 using LRSCard.CurrencyService.API.DTOs.Responses;
 using LRSCard.CurrencyService.Application.Interfaces;
 using LRSCard.CurrencyService.Application.Requests;
@@ -29,6 +30,39 @@ namespace LRSCard.CurrencyService.API.Controllers
                 BaseCurrency = response.Base,
                 Date = response.Date,
                 TargetCurrencies = response.Rates
+            };
+
+            return Ok(dto);
+        }
+
+        [HttpGet("byPeriod")]
+        public async Task<IActionResult> GetByPeriod([FromQuery] GetHistoricalExchangeRateRequestDTO request)
+        {
+            var serviceRequest = new GetHistoricalExchangeRateRequest
+            {
+                BaseCurrency = request.BaseCurrency,
+                InitialDate = request.InitialDate,
+                EndDate = request.EndDate,
+                Pagination = new Application.Common.Pagination
+                {
+                    Page = request.Pagination.Page,
+                    PageSize = request.Pagination.PageSize
+                }
+            };
+
+            var serviceResponse = await _currencyExchangeRateService.GetHistoricalExchangeRatePaginated(serviceRequest);
+
+            var dto = new LRSCard.CurrencyService.API.DTOs.Common.PaginationResultDTO<CurrencyRatesDTO>
+            {
+                TotalCount = serviceResponse.TotalCount,
+                Page = serviceResponse.Page,
+                PageSize = serviceResponse.PageSize,
+                Items = serviceResponse.Items.Select(x => new CurrencyRatesDTO{
+                        Amount = x.Amount,
+                        BaseCurrency = x.Base,
+                        Date = x.Date,
+                        TargetCurrencies = x.Rates
+                }).ToList()
             };
 
             return Ok(dto);

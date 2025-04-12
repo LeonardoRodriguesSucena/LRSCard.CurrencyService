@@ -8,6 +8,7 @@ using LRSCard.CurrencyService.Application.Interfaces;
 using LRSCard.CurrencyService.Infrastructure.ExchangeRateProviders.Frankfurter;
 using LRSCard.CurrencyService.Infrastructure.Options;
 using Microsoft.Extensions.Options;
+using LRSCard.CurrencyService.Infrastructure.Cache;
 
 namespace LRSCard.CurrencyService.Infrastructure
 {
@@ -26,7 +27,15 @@ namespace LRSCard.CurrencyService.Infrastructure
                 client.BaseAddress = new Uri(baseUrl);
             })
             .AddPolicyHandler(GetRetryPolicy(resiliencyConfig))
-            .AddPolicyHandler(GetCircuitBreakerPolicy(resiliencyConfig)); 
+            .AddPolicyHandler(GetCircuitBreakerPolicy(resiliencyConfig));
+
+            
+            //Redis
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = configuration["Redis:ConnectionString"] ?? "localhost:6379";
+            });
+            services.AddSingleton<ICurrencyRateCache, RedisCurrencyRateCache>();
 
             return services;
         }

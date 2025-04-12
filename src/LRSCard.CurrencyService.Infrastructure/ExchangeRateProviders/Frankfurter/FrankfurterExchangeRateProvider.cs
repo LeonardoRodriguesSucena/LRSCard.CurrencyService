@@ -49,7 +49,7 @@ namespace LRSCard.CurrencyService.Infrastructure.ExchangeRateProviders.Frankfurt
             return getLastestResult;
         }
 
-        public Task<Domain.CurrencyRates> GetExchangeRate(
+        public async Task<Domain.CurrencyRates> GetExchangeRate(
             float? amount = null,
             DateTime? date = null,
             string? baseCurrency = null,
@@ -57,19 +57,18 @@ namespace LRSCard.CurrencyService.Infrastructure.ExchangeRateProviders.Frankfurt
          )
         {
             //calling the API
-            //add polly here afterwards
-            FrankfurterAPIResponse response = GetAPIExchangeRate(amount, date, baseCurrency, symbols).Result;
+            FrankfurterAPIResponse response = await GetAPIExchangeRate(amount, date, baseCurrency, symbols);
 
             //mapping to Domain object
             if (response != null)
             {
-                return Task.FromResult(new Domain.CurrencyRates
+                return new Domain.CurrencyRates
                 {
                     Amount = response.Amount,
                     Base = response.Base,
                     Date = response.Date,
                     Rates = response.Rates
-                });
+                };
             }
             else
             {

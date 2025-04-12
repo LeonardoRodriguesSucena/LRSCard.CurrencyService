@@ -2,6 +2,7 @@
 using LRSCard.CurrencyService.Application.Interfaces;
 using LRSCard.CurrencyService.Application.Options;
 using LRSCard.CurrencyService.Application.Requests;
+using LRSCard.CurrencyService.Domain;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,16 @@ namespace LRSCard.CurrencyService.Application
     public class CurrencyExchangeRateService : ICurrencyExchangeRateService
     {
         private readonly IExchangeRateProvider _exchangeRateProvider;
+        private readonly ICurrencyRateCache _currencyRateCache;
         private readonly HashSet<string> _currencyCodesNotAllowedInResponse;
 
         public CurrencyExchangeRateService(
-            IExchangeRateProvider exchangeRateProvider, 
+            IExchangeRateProvider exchangeRateProvider,
+            ICurrencyRateCache currencyRateCache,
             IOptions<CurrencyRulesOptions> currencyRulesOptions) 
         {        
             _exchangeRateProvider = exchangeRateProvider;
+            _currencyRateCache = currencyRateCache;
             _currencyCodesNotAllowedInResponse = new HashSet<string>(currencyRulesOptions.Value.BlockedCurrencyCodes, StringComparer.OrdinalIgnoreCase);
         }
 
@@ -51,11 +55,45 @@ namespace LRSCard.CurrencyService.Application
             return response;
         }
 
-        public async Task<PaginationResult<Domain.CurrencyRates>> GetHistoricalExchangeRatePaginated(GetHistoricalExchangeRateRequest request)
+        public async Task<PaginationResult<CurrencyRates>> GetHistoricalExchangeRatePaginated(GetHistoricalExchangeRateRequest request)
         {
-            //do the logic later
-            return new PaginationResult<Domain.CurrencyRates>();
+            var allDates = Enumerable.Range(0, (request.EndDate - request.InitialDate).Days + 1)
+                                      .Select(offset => request.InitialDate.AddDays(offset))
+                                      .ToList();
+
+            var pagedDates = allDates
+                .Skip((request.Pagination.Page - 1) * request.Pagination.PageSize)
+                .Take(request.Pagination.PageSize);
+
+            var results = new List<CurrencyRates>();
+
+            foreach (var date in pagedDates)
+            {
+                var cached = await _currencyRateCache.GetAsync(date, request.BaseCurrency);
+                if (cached != null)
+                {
+                    results.Add(cached);
+                    continue;
+                }
+
+                var result = await _exchangeRateProvider.GetExchangeRate(
+                    date: date,
+                    baseCurrency: request.BaseCurrency
+                );
+
+                await _currencyRateCache.SetAsync(date, request.BaseCurrency, result);
+                results.Add(result);
+            }
+
+            return new PaginationResult<CurrencyRates>
+            {
+                Page = request.Pagination.Page,
+                PageSize = request.Pagination.PageSize,
+                TotalCount = allDates.Count,
+                Items = results
+            };
         }
+
 
     }
 
