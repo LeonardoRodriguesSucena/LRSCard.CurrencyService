@@ -29,6 +29,19 @@ namespace LRSCard.CurrencyService.Application
             _currencyCodesNotAllowedInResponse = new HashSet<string>(currencyRulesOptions.Value.BlockedCurrencyCodes, StringComparer.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Retrieves exchange rates for a specific date or the latest available rates.
+        /// </summary>
+        /// <param name="request">
+        /// The request object containing the parameters:
+        /// - <c>Amount</c>: (optional) The amount to convert. Default is 1.
+        /// - <c>Date</c>: (optional) The specific date for historical data. If null, the latest rates will be fetched.
+        /// - <c>BaseCurrency</c>: (required) The base currency code (e.g., "USD", "EUR").
+        /// - <c>Symbols</c>: (optional) A list of target currency codes to filter the results.
+        /// </param>
+        /// <returns>
+        /// A <see cref="Domain.CurrencyRates"/> object containing the exchange rate information for the given parameters.
+        /// </returns>
         public async Task<Domain.CurrencyRates> GetExchangeRate(GetExchangeRateRequest request)
         {
             var response = await this._exchangeRateProvider.GetExchangeRate(
@@ -38,8 +51,25 @@ namespace LRSCard.CurrencyService.Application
                 symbols: request.Symbols
             );
 
+            // Make sure the result keeps the original requested date.
+            // The provider may return data for the last business day if the date falls on a weekend or holiday.
+            // This helps avoid confusion when showing the result.
+            response.Date = request.Date.HasValue? request.Date : DateTime.Now;
             return response;
         }
+
+        /// <summary>
+        /// Retrieves current convertion for BaseCurrency to Symbols informed.
+        /// </summary>
+        /// <param name="request">
+        /// The request object containing the parameters:
+        /// - <c>Amount</c>: (required) The amount to convert.
+        /// - <c>BaseCurrency</c>: (required) The base currency code (e.g., "USD", "EUR").
+        /// - <c>Symbols</c>: (required) A list of target currency codes to filter the results.
+        /// </param>
+        /// <returns>
+        /// A <see cref="Domain.CurrencyRates"/> object containing the exchange rate information for the given parameters.
+        /// </returns>
         public async Task<Domain.CurrencyRates> GetCurrencyConvertion(GetCurrencyConversionRequest request)
         {
             var response = await this._exchangeRateProvider.GetExchangeRate(
@@ -52,10 +82,28 @@ namespace LRSCard.CurrencyService.Application
                .Where(r => !_currencyCodesNotAllowedInResponse.Contains(r.Key))
                .ToDictionary(r => r.Key, r => r.Value);
 
-
+            // Make sure the result keeps the original requested date, in this case, the lastest.
+            // The provider may return data for the last business day if the date falls on a weekend or holiday.
+            // This helps avoid confusion when showing the result.
+            response.Date = DateTime.Now;
             return response;
         }
 
+        /// <summary>
+        /// Retrieves exchange rates for a specific date range.
+        /// </summary>
+        /// <param name="request">
+        /// The request object containing the parameters:
+        /// - <c>Amount</c>: (optional) The amount to convert. Default is 1.
+        /// - <c>InitialDate</c>: (required) Initial Date.
+        /// - <c>EndDate</c>: (required) End Date.
+        /// - <c>BaseCurrency</c>: (required) The base currency code (e.g., "USD", "EUR").
+        /// - <c>Symbols</c>: A list of target currency codes to filter the results.
+        /// - <c>Pagination</c>: Pagination configuration.
+        /// </param>
+        /// <returns>
+        /// Paginated CurrencyRates PaginationResult<CurrencyRates>.
+        /// </returns>
         public async Task<PaginationResult<CurrencyRates>> GetHistoricalExchangeRatePaginated(GetHistoricalExchangeRateRequest request)
         {
             //creating a list with all days
@@ -84,6 +132,11 @@ namespace LRSCard.CurrencyService.Application
                     date: date,
                     baseCurrency: request.BaseCurrency
                 );
+
+                //Ensuring that date requested is the date that will be shown in the result
+                //On weekends or holidays, the quotation date is the last business day
+                //So it can cause confusion
+                result.Date = date;
 
                 await _currencyRateCache.SetAsync(date, request.BaseCurrency, result);
                 results.Add(result);
