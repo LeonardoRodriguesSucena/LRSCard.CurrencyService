@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LRSCard.CurrencyService.Application
 {
@@ -57,16 +58,19 @@ namespace LRSCard.CurrencyService.Application
 
         public async Task<PaginationResult<CurrencyRates>> GetHistoricalExchangeRatePaginated(GetHistoricalExchangeRateRequest request)
         {
-            var allDates = Enumerable.Range(0, (request.EndDate - request.InitialDate).Days + 1)
-                                      .Select(offset => request.InitialDate.AddDays(offset))
-                                      .ToList();
+            //creating a list with all days
+            int dateRangeInDays = (request.EndDate - request.InitialDate).Days + 1;
 
+            var allDates = new List<DateTime>();
+            for (int i = 0; i < dateRangeInDays; i++)
+                allDates.Add(request.InitialDate.AddDays(i));
+
+            //filtering just the dates that will be returned, so just these we need to get the rates
             var pagedDates = allDates
                 .Skip((request.Pagination.Page - 1) * request.Pagination.PageSize)
                 .Take(request.Pagination.PageSize);
 
             var results = new List<CurrencyRates>();
-
             foreach (var date in pagedDates)
             {
                 var cached = await _currencyRateCache.GetAsync(date, request.BaseCurrency);
@@ -93,8 +97,6 @@ namespace LRSCard.CurrencyService.Application
                 Items = results
             };
         }
-
-
     }
 
 

@@ -29,12 +29,13 @@ namespace LRSCard.CurrencyService.Infrastructure
             .AddPolicyHandler(GetRetryPolicy(resiliencyConfig))
             .AddPolicyHandler(GetCircuitBreakerPolicy(resiliencyConfig));
 
-            
+
             //Redis
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = configuration["Redis:ConnectionString"] ?? "localhost:6379";
             });
+            services.Configure<CacheProviderOptions>(configuration.GetSection("CacheProviderOptions"));
             services.AddSingleton<ICurrencyRateCache, RedisCurrencyRateCache>();
 
             return services;
