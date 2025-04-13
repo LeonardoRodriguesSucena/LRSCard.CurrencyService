@@ -11,11 +11,11 @@ namespace LRSCard.CurrencyService.API.Controllers
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/exchange-rates")]
     [ApiController]    
-    public class ExchangeRateController : ControllerBase
+    public class ExchangeRatesController : ControllerBase
     {
         private readonly ICurrencyExchangeRateService _currencyExchangeRateService;
 
-        public ExchangeRateController(ICurrencyExchangeRateService currencyExchangeRateService)
+        public ExchangeRatesController(ICurrencyExchangeRateService currencyExchangeRateService)
         {
             _currencyExchangeRateService = currencyExchangeRateService;
         }
@@ -35,7 +35,7 @@ namespace LRSCard.CurrencyService.API.Controllers
             return Ok(dto);
         }
 
-        [HttpGet("byPeriod")]
+        [HttpGet("history")]
         public async Task<IActionResult> GetByPeriod([FromQuery] GetHistoricalExchangeRateRequestDTO request)
         {
             var serviceRequest = new GetHistoricalExchangeRateRequest
@@ -45,8 +45,8 @@ namespace LRSCard.CurrencyService.API.Controllers
                 EndDate = request.EndDate,
                 Pagination = new Application.Common.Pagination
                 {
-                    Page = request.Pagination.Page,
-                    PageSize = request.Pagination.PageSize
+                    Page = request.Page,
+                    PageSize = request.PageSize
                 }
             };
 
@@ -68,7 +68,7 @@ namespace LRSCard.CurrencyService.API.Controllers
             return Ok(dto);
         }
 
-        [HttpPost("conversion")]
+        [HttpPost("convert")]
         public async Task<IActionResult> GetCurrencyConversion([FromBody] GetCurrencyConversionRequestDTO request)
         {
             var serviceRequest = new GetCurrencyConversionRequest 
