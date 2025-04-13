@@ -3,6 +3,7 @@ using LRSCard.CurrencyService.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.OpenApi.Models;
 
 
 namespace LRSCard.CurrencyService.API
@@ -40,7 +41,16 @@ namespace LRSCard.CurrencyService.API
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Currency Service API",
+                    Description = "API for currency rate operations"
+                });
+            });
 
             var app = builder.Build();
 

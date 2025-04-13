@@ -7,18 +7,34 @@ namespace LRSCard.CurrencyService.API.DTOs.Requests
 {
     public class GetHistoricalExchangeRateRequestDTO: IValidatableObject
     {
+        /// <summary>
+        /// The base currency (e.g., USD, EUR)
+        /// </summary>
         [Required]
         public string BaseCurrency { get; set; }
 
+        /// <summary>
+        /// Start of the date range (format: yyyy-MM-dd)
+        /// </summary>
         [Required]
         [DataType(DataType.Date)]
         public DateTime InitialDate { get; set; }
 
+        /// <summary>
+        /// End of the date range (format: yyyy-MM-dd)
+        /// </summary>
         [Required]
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
 
+        /// <summary>
+        /// Page number (must be greater than 0)
+        /// </summary>
         public int Page { get; set; } = 1;
+
+        /// <summary>
+        /// Page size (between 1 and 60)
+        /// </summary>
         public int PageSize { get; set; } = 10;
 
 

@@ -21,7 +21,7 @@ namespace LRSCard.CurrencyService.API.Controllers
         }
 
         [HttpGet("latest")]
-        public async Task<IActionResult> GetLatest([FromQuery]GetLastestCurrencyRequestDTO request)
+        public async Task<IActionResult> GetLatest([FromQuery] GetLastestCurrencyRequestDTO request)
         {
             var response = await _currencyExchangeRateService.GetExchangeRate(new GetExchangeRateRequest{ BaseCurrency = request.BaseCurrency});
             CurrencyRatesDTO dto = new CurrencyRatesDTO
