@@ -1,11 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using LRSCard.CurrencyService.API.Validations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LRSCard.CurrencyService.API.DTOs.Requests
 {
     public class GetLastestCurrencyRequestDTO: IValidatableObject
     {
+        [BindRequired]
         [Required]
+        [FromQuery(Name = "baseCurrency")]
         public string BaseCurrency { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
