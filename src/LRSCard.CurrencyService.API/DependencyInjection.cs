@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using LRSCard.CurrencyService.API.Options;
+using System.Threading.RateLimiting;
 
 namespace LRSCard.CurrencyService.API
 {
@@ -38,6 +39,41 @@ namespace LRSCard.CurrencyService.API
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
                     };
                 });
+
+            // Rate Limiting
+            services.Configure<ApiRateLimitOptions>(configuration.GetSection("APIRateLimit"));
+            var rateLimitOptions = configuration.GetSection("APIRateLimit").Get<ApiRateLimitOptions>() ?? new();
+
+            services.AddRateLimiter(options =>
+            {
+                //.Net8 by default uses RejectionStatusCode = 503(ServiceUnavailable) for rate limiting
+                // I am changing it to 429(TooManyRequests) which is more common
+                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+                // Default rate limit policy, for authenticated users, for example
+                options.AddPolicy("default", context =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: context.Connection?.RemoteIpAddress?.ToString() ?? "default",
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = rateLimitOptions.Default.PermitLimit,
+                            Window = TimeSpan.FromSeconds(rateLimitOptions.Default.WindowSeconds),
+                            QueueLimit = rateLimitOptions.Default.QueueLimit,
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        }));
+
+                // Anonimous rate limit policy, more restrictive
+                options.AddPolicy("anonymous", context =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: context.Connection?.RemoteIpAddress?.ToString() ?? "anonymous",
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = rateLimitOptions.Anonymous.PermitLimit,
+                            Window = TimeSpan.FromSeconds(rateLimitOptions.Anonymous.WindowSeconds),
+                            QueueLimit = rateLimitOptions.Anonymous.QueueLimit,
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+                        }));
+            });
 
 
             return services;

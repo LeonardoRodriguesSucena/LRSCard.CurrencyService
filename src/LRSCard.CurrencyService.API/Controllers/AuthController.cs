@@ -6,12 +6,14 @@ using System.Security.Claims;
 using System.Text;
 using LRSCard.CurrencyService.API.Options;
 using LRSCard.CurrencyService.API.DTOs.Requests;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace LRSCard.CurrencyService.API.Controllers;
 
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/auth")]
+[EnableRateLimiting("anonymous")]
 public class AuthController : ControllerBase
 {
     private readonly JwtSettings _jwtSettings;
@@ -22,7 +24,9 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Simulates authentication and returns a JWT token. 
+    /// Simulates authentication and returns a JWT token.
+    /// You need first a JWT token to be able to test the other operations
+    /// Use can use any login and password, and will get a valid token with admin role
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
@@ -30,7 +34,7 @@ public class AuthController : ControllerBase
     public IActionResult GetToken([FromBody] AuthRequestDTO request)
     {
         //User provides credentals, Identity provider validates and generate the token with user claims
-        //User login is sucessfull! Lets fake thetoken
+        //User login is sucessfull! Lets fake the token
         var claims = new[]
         {
             new Claim(ClaimTypes.Name, request.Login),

@@ -6,6 +6,7 @@ using LRSCard.CurrencyService.Application.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace LRSCard.CurrencyService.API.Controllers
 {
@@ -13,6 +14,7 @@ namespace LRSCard.CurrencyService.API.Controllers
     [Route("api/v{version:apiVersion}/exchange-rates")]
     [ApiController]
     [Authorize(Roles = "admin")]
+    [EnableRateLimiting("default")]
     public class ExchangeRatesController : ControllerBase
     {
         private readonly ICurrencyExchangeRateService _currencyExchangeRateService;

@@ -103,8 +103,9 @@ namespace LRSCard.CurrencyService.API
 
             app.UseHttpsRedirection();
 
+            app.UseRateLimiter();
             app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseAuthorization();            
 
 
             app.MapControllers();

@@ -11,14 +11,19 @@ namespace LRSCard.CurrencyService.API.DTOs.Requests
         /// <summary>
         /// Amount of baseCurrency
         /// </summary>
+        /// <example>1</example>
         public float Amount { get; set; }
+
         /// <summary>
         /// The base currency (USD, EUR,...)
         /// </summary>
+        /// <example>USD</example>
         public string BaseCurrency { get; set; }
+
         /// <summary>
         /// Destinations currencies
         /// </summary>
+        /// <example>["EUR","CAD"]</example>
         public List<string> DestinationCurrencies { get; set; } = new List<string>();
     }
 }
