@@ -7,8 +7,10 @@ services:
       - "8080:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - Seq__ServerUrl=http://seq:5341
     depends_on:
       - redis
+      - seq
     networks:
       - backend
 
@@ -19,6 +21,18 @@ services:
       - "6379:6379"
     networks:
       - backend
+
+  seq:
+    image: datalust/seq:latest
+    container_name: seq
+    ports:
+      - "5341:80"      # Expose web UI on http://localhost:5341
+      - "5342:5341"    # Ingest API (apps send logs here)
+    environment:
+      - ACCEPT_EULA=Y
+    networks:
+      - backend 
+
 
 networks:
   backend:
