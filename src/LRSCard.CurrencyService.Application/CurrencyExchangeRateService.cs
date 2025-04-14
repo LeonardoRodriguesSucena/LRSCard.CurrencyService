@@ -1,15 +1,11 @@
 ﻿using LRSCard.CurrencyService.Application.Common;
 using LRSCard.CurrencyService.Application.Interfaces;
 using LRSCard.CurrencyService.Application.Options;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using LRSCard.CurrencyService.Application.Requests;
 using LRSCard.CurrencyService.Domain;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Net.Http.Json;
 
 namespace LRSCard.CurrencyService.Application
 {
@@ -18,15 +14,19 @@ namespace LRSCard.CurrencyService.Application
         private readonly IExchangeRateProvider _exchangeRateProvider;
         private readonly ICurrencyRateCache _currencyRateCache;
         private readonly HashSet<string> _currencyCodesNotAllowedInResponse;
+        private readonly ILogger<CurrencyExchangeRateService> _logger;
 
         public CurrencyExchangeRateService(
             IExchangeRateProvider exchangeRateProvider,
             ICurrencyRateCache currencyRateCache,
-            IOptions<CurrencyRulesOptions> currencyRulesOptions) 
+            IOptions<CurrencyRulesOptions> currencyRulesOptions,
+            ILogger<CurrencyExchangeRateService> logger) 
         {        
             _exchangeRateProvider = exchangeRateProvider;
             _currencyRateCache = currencyRateCache;
             _currencyCodesNotAllowedInResponse = new HashSet<string>(currencyRulesOptions.Value.BlockedCurrencyCodes, StringComparer.OrdinalIgnoreCase);
+
+            _logger = logger;
         }
 
         /// <summary>
@@ -55,6 +55,15 @@ namespace LRSCard.CurrencyService.Application
             // The provider may return data for the last business day if the date falls on a weekend or holiday.
             // This helps avoid confusion when showing the result.
             response.Date = request.Date.HasValue? request.Date : DateTime.Now;
+
+            _logger.LogInformation(
+                "GetExchangeRate retrieved for Amount:{Amount} on Date:{Date} BaseCurrency:{BaseCurrency}: Response:{@Rates}",
+                request.Amount,
+                request.Date,
+                request.BaseCurrency,
+                response.Rates
+            );
+
             return response;
         }
 
@@ -86,6 +95,13 @@ namespace LRSCard.CurrencyService.Application
             // The provider may return data for the last business day if the date falls on a weekend or holiday.
             // This helps avoid confusion when showing the result.
             response.Date = DateTime.Now;
+
+            _logger.LogInformation(
+                "GetCurrencyConvertion retrieved for Amount:{Amount} on BaseCurrency:{BaseCurrency}: Symbols:{Symbols}",
+                request.Amount,
+                request.BaseCurrency,
+                response.Rates);
+
             return response;
         }
 

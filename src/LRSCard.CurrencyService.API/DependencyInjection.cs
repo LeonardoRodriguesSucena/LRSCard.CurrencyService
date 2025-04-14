@@ -8,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using LRSCard.CurrencyService.API.Options;
 using System.Threading.RateLimiting;
+using LRSCard.CurrencyService.API.Context;
+using LRSCard.CurrencyService.Application.Common;
 
 namespace LRSCard.CurrencyService.API
 {
@@ -75,6 +77,10 @@ namespace LRSCard.CurrencyService.API
                         }));
             });
 
+
+            //Request Context
+            services.AddHttpContextAccessor();
+            services.AddScoped<IRequestContext, RequestContext>();
 
             return services;
         }
