@@ -41,7 +41,6 @@ public class AuthController : ControllerBase
         string sub = $"auth0|{Random.Shared.NextInt64(1000000000L, 9999999999L)}";
         var claims = new[]
         {
-            
             new Claim(JwtRegisteredClaimNames.Sub, sub),
             new Claim(ClaimTypes.Name, request.Login),
             new Claim(ClaimTypes.Role, "admin")
