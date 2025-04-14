@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 
 namespace LRSCard.CurrencyService.API
@@ -50,6 +51,10 @@ namespace LRSCard.CurrencyService.API
                     Title = "Currency Service API",
                     Description = "API for currency rate operations"
                 });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
 
                 //JWT Auth support
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
