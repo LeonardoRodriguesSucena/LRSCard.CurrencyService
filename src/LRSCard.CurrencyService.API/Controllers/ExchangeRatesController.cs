@@ -3,6 +3,7 @@ using LRSCard.CurrencyService.API.DTOs.Requests;
 using LRSCard.CurrencyService.API.DTOs.Responses;
 using LRSCard.CurrencyService.Application.Interfaces;
 using LRSCard.CurrencyService.Application.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,7 @@ namespace LRSCard.CurrencyService.API.Controllers
             _currencyExchangeRateService = currencyExchangeRateService;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("latest")]
         public async Task<IActionResult> GetLatest([FromQuery] GetLastestCurrencyRequestDTO request)
         {

@@ -70,6 +70,7 @@ namespace LRSCard.CurrencyService.API
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
