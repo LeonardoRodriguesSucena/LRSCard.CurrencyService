@@ -27,13 +27,13 @@ public class AuthController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost("login")]
-    public IActionResult GetToken([FromBody] AuthRequestDto request)
+    public IActionResult GetToken([FromBody] AuthRequestDTO request)
     {
         //User provides credentals, Identity provider validates and generate the token with user claims
         //User login is sucessfull! Lets fake thetoken
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, request.Username),
+            new Claim(ClaimTypes.Name, request.Login),
             new Claim(ClaimTypes.Role, "admin")
         };
 

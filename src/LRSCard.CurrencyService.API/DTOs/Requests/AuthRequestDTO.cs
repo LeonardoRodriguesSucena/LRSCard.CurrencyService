@@ -1,8 +1,8 @@
 ﻿namespace LRSCard.CurrencyService.API.DTOs.Requests
 {
-    public class AuthRequestDto
+    public class AuthRequestDTO
     {
-        public string Username { get; set; } = "leonardo.sucena";
-        public string Password { get; set; } = "admin";
+        public string Login { get; set; }
+        public string Password { get; set; }
     }
 }

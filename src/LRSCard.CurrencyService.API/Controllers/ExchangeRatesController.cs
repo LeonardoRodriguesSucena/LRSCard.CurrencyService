@@ -11,7 +11,8 @@ namespace LRSCard.CurrencyService.API.Controllers
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/exchange-rates")]
-    [ApiController]    
+    [ApiController]
+    [Authorize(Roles = "admin")]
     public class ExchangeRatesController : ControllerBase
     {
         private readonly ICurrencyExchangeRateService _currencyExchangeRateService;
@@ -21,7 +22,6 @@ namespace LRSCard.CurrencyService.API.Controllers
             _currencyExchangeRateService = currencyExchangeRateService;
         }
 
-        [Authorize(Roles = "admin")]
         [HttpGet("latest")]
         public async Task<IActionResult> GetLatest([FromQuery] GetLastestCurrencyRequestDTO request)
         {
