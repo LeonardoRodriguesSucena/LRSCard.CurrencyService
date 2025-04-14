@@ -15,10 +15,8 @@
             _blockedCurrencyCodes = new HashSet<string>(blocked ?? [], StringComparer.OrdinalIgnoreCase);
         }
 
-        public static bool IsValidCurrencyCode(string currencyCode) =>
-            _currencyCodes.Contains(currencyCode);
+        public static bool IsValidCurrencyCode(string currencyCode) => _currencyCodes.Contains(currencyCode);
 
-        public static bool IsBlocked(string currencyCode) =>
-            _blockedCurrencyCodes.Contains(currencyCode);
+        public static bool IsBlocked(string currencyCode) => _blockedCurrencyCodes.Contains(currencyCode);
     }
 }
