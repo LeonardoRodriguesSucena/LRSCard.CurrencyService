@@ -7,6 +7,7 @@ using System.Text;
 using LRSCard.CurrencyService.API.Options;
 using LRSCard.CurrencyService.API.DTOs.Requests;
 using Microsoft.AspNetCore.RateLimiting;
+using System;
 
 namespace LRSCard.CurrencyService.API.Controllers;
 
@@ -35,8 +36,13 @@ public class AuthController : ControllerBase
     {
         //User provides credentals, Identity provider validates and generate the token with user claims
         //User login is sucessfull! Lets fake the token
+
+        // faking the sub (userId) received by IdentityProvider, lets say for example Auth0. Auth0|1234567890
+        string sub = $"auth0|{Random.Shared.NextInt64(1000000000L, 9999999999L)}";
         var claims = new[]
         {
+            
+            new Claim(JwtRegisteredClaimNames.Sub, sub),
             new Claim(ClaimTypes.Name, request.Login),
             new Claim(ClaimTypes.Role, "admin")
         };
@@ -52,7 +58,15 @@ public class AuthController : ControllerBase
             signingCredentials: creds
         );
 
+        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
         // Returning the token
-        return Ok(new { access_token = new JwtSecurityTokenHandler().WriteToken(token) });
+        return Ok(new
+        {
+            access_token = tokenString,
+            expires_in = _jwtSettings.ExpiresInMinutes,
+            token_type = "Bearer",
+            sub = sub
+        });
     }
 }
