@@ -2,7 +2,6 @@ using LRSCard.CurrencyService.Application;
 using LRSCard.CurrencyService.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Serilog;
@@ -25,6 +24,7 @@ namespace LRSCard.CurrencyService.API
 
                 Log.Information("Starting...");
 
+                
                 builder.Host.UseSerilog();
 
                 builder.Services.AddApplication(builder.Configuration);
@@ -115,12 +115,13 @@ namespace LRSCard.CurrencyService.API
 
                 app.UseHttpsRedirection();
 
-                app.UseMiddleware<RequestLoggingMiddleware>();
+                
 
                 app.UseRateLimiter();
                 app.UseAuthentication();
                 app.UseAuthorization();
 
+                app.UseMiddleware<RequestLoggingMiddleware>();
 
                 app.MapControllers();
 

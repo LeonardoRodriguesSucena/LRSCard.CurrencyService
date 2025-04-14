@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Serilog;
+using Serilog.Context;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -22,48 +23,43 @@ namespace LRSCard.CurrencyService.API.Middlewares
             context.Items["CorrelationId"] = correlationId;
             context.Response.Headers["X-Correlation-ID"] = correlationId;
 
+            var userId = context.User.FindFirst(ClaimTypes.Name)?.Value;
+            var sub = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var ip = context.Connection.RemoteIpAddress?.ToString();
             var method = context.Request.Method;
-            var path = context.Request.Path;
+            var path = context.Request.Path;        
 
-            try
+            using (LogContext.PushProperty("UserId", userId ?? "Anonymous"))
+            using (LogContext.PushProperty("Sub", sub ?? ""))
+            using (LogContext.PushProperty("CorrelationId", correlationId ?? ""))
+            using (LogContext.PushProperty("IP", ip ?? ""))
             {
-                await _next(context);
+                try
+                {
+                    await _next(context);
+                    stopwatch.Stop();
 
-                stopwatch.Stop();
+                    Log.Information("Request {Method} {Path} responded {StatusCode} in {Elapsed}ms",
+                        method,
+                        path,
+                        context.Response.StatusCode,
+                        stopwatch.ElapsedMilliseconds,
+                        ip
+                    );
+                }
+                catch (Exception ex)
+                {
+                    stopwatch.Stop();
 
-                var userId = context.User.FindFirst(ClaimTypes.Name)?.Value;
-                var sub = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    Log.Error(ex, "Request {Method} {Path} failed in {Elapsed}ms",
+                        method,
+                        path,
+                        stopwatch.ElapsedMilliseconds,
+                        ip
+                    );
 
-                Log.Information("Request {Method} {Path} responded {StatusCode} in {Elapsed}ms | IP: {IP} | User: {UserId} | Sub: {sub} | CorrelationId: {CorrelationId}",
-                    method,
-                    path,
-                    context.Response.StatusCode,
-                    stopwatch.ElapsedMilliseconds,
-                    ip,
-                    userId ?? "Anonymous",
-                    sub ?? "",
-                    correlationId
-                );
-            }
-            catch (Exception ex)
-            {
-                stopwatch.Stop();
-
-                var userId = context.User.FindFirst(ClaimTypes.Name)?.Value;
-                var sub = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-                Log.Error(ex, "Request {Method} {Path} failed in {Elapsed}ms | IP: {IP} | User: {UserId} | Sub: {sub} | CorrelationId: {CorrelationId}",
-                    method,
-                    path,
-                    stopwatch.ElapsedMilliseconds,
-                    ip,
-                    userId ?? "Anonymous",
-                    sub ?? "",
-                    correlationId
-                );
-
-                throw;
+                    throw;
+                }
             }
         }
     }
