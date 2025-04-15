@@ -59,7 +59,7 @@ namespace LRSCard.CurrencyService.Application
                 response.Date = request.Date.HasValue? request.Date : DateTime.Now;
 
                 //Log request and response
-                _logger.LogInformation("GetExchangeRate | Request: {Request} Response: {Response}", 
+                _logger.LogInformation("GetExchangeRate | Request: {Request} | Response: {Response}", 
                     JsonSerializer.Serialize(request), 
                     JsonSerializer.Serialize(response));
             }
@@ -89,28 +89,41 @@ namespace LRSCard.CurrencyService.Application
         /// </returns>
         public async Task<Domain.CurrencyRates> GetCurrencyConvertion(GetCurrencyConversionRequest request)
         {
-            var response = await this._exchangeRateProvider.GetExchangeRate(
+            Domain.CurrencyRates response = null;
+
+            try
+            {
+                response = await this._exchangeRateProvider.GetExchangeRate(
                 amount: request.Amount,
                 baseCurrency: request.BaseCurrency,
                 symbols: request.Symbols
-            );
+                );
 
-            response.Rates = response.Rates?
-               .Where(r => !_currencyCodesNotAllowedInResponse.Contains(r.Key))
-               .ToDictionary(r => r.Key, r => r.Value);
+                //removing not alowed currency codes
+                response.Rates = response.Rates?
+                   .Where(r => !_currencyCodesNotAllowedInResponse.Contains(r.Key))
+                   .ToDictionary(r => r.Key, r => r.Value);
 
-            // Make sure the result keeps the original requested date, in this case, the lastest.
-            // The provider may return data for the last business day if the date falls on a weekend or holiday.
-            // This helps avoid confusion when showing the result.
-            response.Date = DateTime.Now;
+                // Make sure the result keeps the original requested date, in this case, the lastest.
+                // The provider may return data for the last business day if the date falls on a weekend or holiday.
+                // This helps avoid confusion when showing the result.
+                response.Date = DateTime.Now;
 
-            _logger.LogInformation(
-                "GetCurrencyConvertion retrieved for Amount:{Amount} on BaseCurrency:{BaseCurrency}: Symbols:{Symbols}",
-                request.Amount,
-                request.BaseCurrency,
-                response.Rates);
+                //Log request and response
+                _logger.LogInformation("GetCurrencyConvertion | Request: {Request} | Response: {Response}",
+                    JsonSerializer.Serialize(request),
+                    JsonSerializer.Serialize(response));
 
-            return response;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetCurrencyConvertion | Request: {Request} | Response: {Response}",
+                  JsonSerializer.Serialize(request),
+                  (response != null)?JsonSerializer.Serialize(response): null);
+
+                throw;
+            }            
         }
 
         /// <summary>
@@ -130,49 +143,71 @@ namespace LRSCard.CurrencyService.Application
         /// </returns>
         public async Task<PaginationResult<CurrencyRates>> GetHistoricalExchangeRatePaginated(GetHistoricalExchangeRateRequest request)
         {
-            //creating a list with all days
-            int dateRangeInDays = (request.EndDate - request.InitialDate).Days + 1;
+            PaginationResult<CurrencyRates> response = null;
 
-            var allDates = new List<DateTime>();
-            for (int i = 0; i < dateRangeInDays; i++)
-                allDates.Add(request.InitialDate.AddDays(i));
-
-            //filtering just the dates that will be returned, so just these we need to get the rates
-            var pagedDates = allDates
-                .Skip((request.Pagination.Page - 1) * request.Pagination.PageSize)
-                .Take(request.Pagination.PageSize);
-
-            var results = new List<CurrencyRates>();
-            foreach (var date in pagedDates)
+            try
             {
-                var cached = await _currencyRateCache.GetAsync(date, request.BaseCurrency);
-                if (cached != null)
+                //creating a list with all days
+                int dateRangeInDays = (request.EndDate - request.InitialDate).Days + 1;
+
+                var allDates = new List<DateTime>();
+                for (int i = 0; i < dateRangeInDays; i++)
+                    allDates.Add(request.InitialDate.AddDays(i));
+
+                //filtering just the dates that will be returned, so just these we need to get the rates
+                var pagedDates = allDates
+                    .Skip((request.Pagination.Page - 1) * request.Pagination.PageSize)
+                    .Take(request.Pagination.PageSize);
+
+                var results = new List<CurrencyRates>();
+                foreach (var date in pagedDates)
                 {
-                    results.Add(cached);
-                    continue;
+                    var cached = await _currencyRateCache.GetAsync(date, request.BaseCurrency);
+                    if (cached != null)
+                    {
+                        results.Add(cached);
+                        continue;
+                    }
+
+                    var result = await _exchangeRateProvider.GetExchangeRate(
+                        date: date,
+                        baseCurrency: request.BaseCurrency
+                    );
+
+                    //Ensuring that date requested is the date that will be shown in the result
+                    //On weekends or holidays, the quotation date is the last business day
+                    //So it can cause confusion
+                    result.Date = date;
+
+                    await _currencyRateCache.SetAsync(date, request.BaseCurrency, result);
+                    results.Add(result);
                 }
 
-                var result = await _exchangeRateProvider.GetExchangeRate(
-                    date: date,
-                    baseCurrency: request.BaseCurrency
-                );
+                response = new PaginationResult<CurrencyRates>
+                {
+                    Page = request.Pagination.Page,
+                    PageSize = request.Pagination.PageSize,
+                    TotalCount = allDates.Count,
+                    Items = results
+                };
 
-                //Ensuring that date requested is the date that will be shown in the result
-                //On weekends or holidays, the quotation date is the last business day
-                //So it can cause confusion
-                result.Date = date;
+                //Log request and response
+                _logger.LogInformation("GetHistoricalExchangeRatePaginated | Request: {Request} | Response: {Response}",
+                    JsonSerializer.Serialize(request),
+                    JsonSerializer.Serialize(response));
+                
+                return response;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "GetHistoricalExchangeRatePaginated | Request: {Request} | Response: {Response}",
+                    JsonSerializer.Serialize(request),
+                    (response != null) ? JsonSerializer.Serialize(response) : null);
 
-                await _currencyRateCache.SetAsync(date, request.BaseCurrency, result);
-                results.Add(result);
+                throw;
             }
 
-            return new PaginationResult<CurrencyRates>
-            {
-                Page = request.Pagination.Page,
-                PageSize = request.Pagination.PageSize,
-                TotalCount = allDates.Count,
-                Items = results
-            };
+            
         }
     }
 

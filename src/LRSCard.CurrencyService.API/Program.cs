@@ -23,7 +23,6 @@ namespace LRSCard.CurrencyService.API
                 .CreateLogger();
 
                 Log.Information("Starting...");
-
                 
                 builder.Host.UseSerilog();
 
@@ -52,7 +51,6 @@ namespace LRSCard.CurrencyService.API
                     options.SubstituteApiVersionInUrl = true;
                 });
 
-                // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                 builder.Services.AddEndpointsApiExplorer();
 
                 builder.Services.AddSwaggerGen(options =>
@@ -113,9 +111,7 @@ namespace LRSCard.CurrencyService.API
                     });
                 }
 
-                app.UseHttpsRedirection();
-
-                
+                app.UseHttpsRedirection();                
 
                 app.UseRateLimiter();
                 app.UseAuthentication();

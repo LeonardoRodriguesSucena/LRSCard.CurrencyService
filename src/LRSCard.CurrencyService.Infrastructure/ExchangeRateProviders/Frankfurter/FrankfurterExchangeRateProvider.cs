@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Threading.Tasks;
 using LRSCard.CurrencyService.Application.Interfaces;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 
 namespace LRSCard.CurrencyService.Infrastructure.ExchangeRateProviders.Frankfurter
 {
     public class FrankfurterExchangeRateProvider : IExchangeRateProvider
     {
         private readonly HttpClient _httpClient;
-        
-        public FrankfurterExchangeRateProvider(HttpClient httpClient)
+        private readonly ILogger<FrankfurterExchangeRateProvider> _logger;
+
+        public FrankfurterExchangeRateProvider(HttpClient httpClient, ILogger<FrankfurterExchangeRateProvider> logger)
         {
-            _httpClient = httpClient;            
+            _httpClient = httpClient;
+            _logger = logger;
         }
 
         private async Task<FrankfurterAPIResponse> GetAPIExchangeRate(
@@ -25,28 +24,38 @@ namespace LRSCard.CurrencyService.Infrastructure.ExchangeRateProviders.Frankfurt
             List<string>? symbols=null
          )
         {
-            string dateParam = date.HasValue ? date.Value.ToString("yyyy-MM-dd"):"latest";
             var queryParams = new Dictionary<string, string?>();
-            if(amount.HasValue) 
+            string dateParam = date.HasValue ? date.Value.ToString("yyyy-MM-dd") : "latest";
+
+            if (amount.HasValue)
                 queryParams.Add("amount", amount.ToString());
-            
-            if (!String.IsNullOrEmpty(baseCurrency)) 
+
+            if (!String.IsNullOrEmpty(baseCurrency))
                 queryParams.Add("base", baseCurrency.ToString());
 
-            if(symbols != null && symbols.Count > 0)
+            if (symbols != null && symbols.Count > 0)
                 queryParams.Add("symbols", string.Join(",", symbols));
-            
+
             string apiUrl = QueryHelpers.AddQueryString($"{this._httpClient.BaseAddress}{dateParam}", queryParams);
 
-            var response = await _httpClient.GetAsync(apiUrl);
-            response.EnsureSuccessStatusCode();
-            var contentStream = await response.Content.ReadAsStreamAsync();
-            var getLastestResult = await JsonSerializer.DeserializeAsync<FrankfurterAPIResponse>(contentStream, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
+            try {                
+                var response = await _httpClient.GetAsync(apiUrl);
+                response.EnsureSuccessStatusCode();
+                var contentStream = await response.Content.ReadAsStreamAsync();
+                var getLastestResult = await JsonSerializer.DeserializeAsync<FrankfurterAPIResponse>(contentStream, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
 
-            return getLastestResult;
+                _logger.LogInformation( $"FrankfurterExchangeRateProvider GetAPIExchangeRate: RequestToProvider:{apiUrl} | Response: {JsonSerializer.Serialize(getLastestResult)}");
+
+                return getLastestResult;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"FrankfurterExchangeRateProvider GetAPIExchangeRate:Error in getting exchange rate | Request: {apiUrl} | Error : {ex.Message}");
+                throw;
+            }            
         }
 
         public async Task<Domain.CurrencyRates> GetExchangeRate(

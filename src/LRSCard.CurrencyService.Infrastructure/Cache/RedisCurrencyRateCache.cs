@@ -2,6 +2,7 @@
 using LRSCard.CurrencyService.Domain;
 using LRSCard.CurrencyService.Infrastructure.Options;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 
@@ -11,11 +12,13 @@ namespace LRSCard.CurrencyService.Infrastructure.Cache
     {
         private readonly IDistributedCache _cache;
         private readonly CacheProviderOptions _cacheProviderOptions;
+        private readonly ILogger<RedisCurrencyRateCache> _logger;
 
-        public RedisCurrencyRateCache(IDistributedCache cache, IOptions<CacheProviderOptions> options)
+        public RedisCurrencyRateCache(IDistributedCache cache, IOptions<CacheProviderOptions> options, ILogger<RedisCurrencyRateCache> logger)
         {
             _cache = cache;
             _cacheProviderOptions = options.Value;
+            _logger = logger;
         }
 
         public async Task<CurrencyRates?> GetAsync(DateTime date, string baseCurrency)
@@ -30,7 +33,7 @@ namespace LRSCard.CurrencyService.Infrastructure.Cache
             }
             catch (Exception err)
             {
-                Console.WriteLine($"Error in getting cache for date:{date} and baseCurrency:{baseCurrency} : {err.Message}");
+                _logger.LogError(err, $"RedisCurrencyRateCache GetAsync: Error in getting cache for date:{date} and baseCurrency:{baseCurrency}:{err.Message}");
             }
 
             return null;
@@ -49,7 +52,7 @@ namespace LRSCard.CurrencyService.Infrastructure.Cache
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error setting cache for key '{key}': {ex.Message}");
+                _logger.LogError(ex, $"RedisCurrencyRateCache SetAsync: Error in setting cache for key '{key}': {ex.Message}");
             }
         }
 
