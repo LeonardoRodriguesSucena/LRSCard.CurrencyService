@@ -19,6 +19,7 @@ namespace LRSCard.CurrencyService.API.Middlewares
         {
             var stopwatch = Stopwatch.StartNew();
 
+            //Creating the correlationID that will be added to the log & context.Response.Headers
             string correlationId = Guid.NewGuid().ToString();
             context.Items["CorrelationId"] = correlationId;
             context.Response.Headers["X-Correlation-ID"] = correlationId;
@@ -27,35 +28,37 @@ namespace LRSCard.CurrencyService.API.Middlewares
             var sub = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var ip = context.Connection.RemoteIpAddress?.ToString();
             var method = context.Request.Method;
-            var path = context.Request.Path;        
-
+            var path = context.Request.Path;
+                        
+            //attaching user information to the log
             using (LogContext.PushProperty("UserId", userId ?? "Anonymous"))
             using (LogContext.PushProperty("Sub", sub ?? ""))
             using (LogContext.PushProperty("CorrelationId", correlationId ?? ""))
             using (LogContext.PushProperty("IP", ip ?? ""))
             {
+                //log template
+                string logTemplate = "Request:{Method} {Path}| ResponseCode:{StatusCode}| ResponseTime:{Elapsed}ms";
                 try
                 {
                     await _next(context);
                     stopwatch.Stop();
-
-                    Log.Information("Request {Method} {Path} responded {StatusCode} in {Elapsed}ms",
+                    
+                    Log.Information(logTemplate,
                         method,
                         path,
                         context.Response.StatusCode,
-                        stopwatch.ElapsedMilliseconds,
-                        ip
+                        stopwatch.ElapsedMilliseconds
                     );
                 }
                 catch (Exception ex)
                 {
                     stopwatch.Stop();
 
-                    Log.Error(ex, "Request {Method} {Path} failed in {Elapsed}ms",
-                        method,
-                        path,
-                        stopwatch.ElapsedMilliseconds,
-                        ip
+                    Log.Error(ex, logTemplate,
+                       method,
+                       path,
+                       context.Response.StatusCode,
+                       stopwatch.ElapsedMilliseconds
                     );
 
                     throw;

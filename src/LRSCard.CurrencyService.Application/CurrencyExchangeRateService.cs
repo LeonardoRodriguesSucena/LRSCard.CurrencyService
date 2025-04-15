@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using LRSCard.CurrencyService.Application.Requests;
 using LRSCard.CurrencyService.Domain;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace LRSCard.CurrencyService.Application
 {
@@ -25,7 +26,6 @@ namespace LRSCard.CurrencyService.Application
             _exchangeRateProvider = exchangeRateProvider;
             _currencyRateCache = currencyRateCache;
             _currencyCodesNotAllowedInResponse = new HashSet<string>(currencyRulesOptions.Value.BlockedCurrencyCodes, StringComparer.OrdinalIgnoreCase);
-
             _logger = logger;
         }
 
@@ -44,25 +44,33 @@ namespace LRSCard.CurrencyService.Application
         /// </returns>
         public async Task<Domain.CurrencyRates> GetExchangeRate(GetExchangeRateRequest request)
         {
-            var response = await this._exchangeRateProvider.GetExchangeRate(
-                amount: request.Amount,
-                date: request.Date,
-                baseCurrency: request.BaseCurrency,
-                symbols: request.Symbols
-            );
+            Domain.CurrencyRates? response = null;
+            try { 
+                response = await this._exchangeRateProvider.GetExchangeRate(
+                    amount: request.Amount,
+                    date: request.Date,
+                    baseCurrency: request.BaseCurrency,
+                    symbols: request.Symbols
+                );
 
-            // Make sure the result keeps the original requested date.
-            // The provider may return data for the last business day if the date falls on a weekend or holiday.
-            // This helps avoid confusion when showing the result.
-            response.Date = request.Date.HasValue? request.Date : DateTime.Now;
+                // Make sure the result keeps the original requested date.
+                // The provider may return data for the last business day if the date falls on a weekend or holiday.
+                // This helps avoid confusion when showing the result.
+                response.Date = request.Date.HasValue? request.Date : DateTime.Now;
 
-            _logger.LogInformation(
-                "GetExchangeRate retrieved for Amount:{Amount} on Date:{Date} BaseCurrency:{BaseCurrency}: Response:{@Rates}",
-                request.Amount,
-                request.Date,
-                request.BaseCurrency,
-                response.Rates
-            );
+                //Log request and response
+                _logger.LogInformation("GetExchangeRate | Request: {Request} Response: {Response}", 
+                    JsonSerializer.Serialize(request), 
+                    JsonSerializer.Serialize(response));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetExchangeRate | Request: {Request} | Response: {Response}", 
+                    JsonSerializer.Serialize(request), 
+                    (response != null)? JsonSerializer.Serialize(response): "null");
+
+                throw;
+            }
 
             return response;
         }
