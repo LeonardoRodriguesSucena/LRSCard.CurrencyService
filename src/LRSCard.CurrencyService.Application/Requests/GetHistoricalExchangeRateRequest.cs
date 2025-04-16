@@ -16,6 +16,8 @@ namespace LRSCard.CurrencyService.Application.Requests
         public List<string>? Symbols { get; set; } = null;
         public Pagination Pagination { get; set; } = new Pagination();
 
+        //preparing for future aditional providers
+        public CurrencyProviderType CurrencyProvider { get; set; } = CurrencyProviderType.Frankfurter;
     }
 
 }

@@ -11,7 +11,11 @@ namespace LRSCard.CurrencyService.Application.Requests
     {
         public float Amount { get; set; }
         public string BaseCurrency { get; set; }
-        public List<string> Symbols { get; set; }        
+        public List<string> Symbols { get; set; }
+
+        //preparing for future aditional providers
+        public CurrencyProviderType CurrencyProvider { get; set; } = CurrencyProviderType.Frankfurter;
+
     }
 
 }

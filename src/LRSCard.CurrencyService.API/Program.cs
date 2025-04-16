@@ -26,8 +26,8 @@ namespace LRSCard.CurrencyService.API
                 
                 builder.Host.UseSerilog();
 
-                builder.Services.AddApplication(builder.Configuration);
                 builder.Services.AddInfrastructure(builder.Configuration);
+                builder.Services.AddApplication(builder.Configuration);                
                 builder.Services.AddPresentation(builder.Configuration);
 
 

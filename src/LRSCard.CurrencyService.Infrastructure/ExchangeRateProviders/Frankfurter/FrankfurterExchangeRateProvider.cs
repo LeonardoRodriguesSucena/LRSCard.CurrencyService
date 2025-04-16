@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using LRSCard.CurrencyService.Application.Interfaces;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace LRSCard.CurrencyService.Infrastructure.ExchangeRateProviders.Frankfurter
@@ -11,9 +12,10 @@ namespace LRSCard.CurrencyService.Infrastructure.ExchangeRateProviders.Frankfurt
         private readonly HttpClient _httpClient;
         private readonly ILogger<FrankfurterExchangeRateProvider> _logger;
 
-        public FrankfurterExchangeRateProvider(HttpClient httpClient, ILogger<FrankfurterExchangeRateProvider> logger)
+        public FrankfurterExchangeRateProvider(HttpClient httpClient, ILogger<FrankfurterExchangeRateProvider> logger, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _httpClient.BaseAddress = new Uri(configuration["ExchangeProvider:Frankfurter:BaseUrl"]);
             _logger = logger;
         }
 

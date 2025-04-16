@@ -7,16 +7,14 @@ using LRSCard.CurrencyService.Application.Interfaces;
 using LRSCard.CurrencyService.Application.Options;
 using LRSCard.CurrencyService.Application.Requests;
 using LRSCard.CurrencyService.Domain;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Castle.Components.DictionaryAdapter.Xml;
+using LRSCard.CurrencyService.Application.Common;
 
 namespace LRSCard.CurrencyService.Tests
 {
     public class CurrencyExchangeRateServiceTests
     {
         private readonly Mock<IExchangeRateProvider> _exchangeRateProviderMock = new();
+        private readonly Mock<ICurrencyProviderFactory> _providerFactoryMock = new();
         private readonly Mock<ICurrencyRateCache> _currencyRateCacheMock = new();
         private readonly Mock<ILogger<CurrencyExchangeRateService>> _loggerMock = new();
         private readonly CurrencyExchangeRateService _service;
@@ -31,8 +29,12 @@ namespace LRSCard.CurrencyService.Tests
                 BlockedCurrencyCodes = new List<string> { "TRY", "PLN", "THB", "MXN" },
             });
 
+            _providerFactoryMock
+                .Setup(factory => factory.GetProvider(It.IsAny<CurrencyProviderType>()))
+                .Returns(_exchangeRateProviderMock.Object);
+
             _service = new CurrencyExchangeRateService(
-                _exchangeRateProviderMock.Object,
+                _providerFactoryMock.Object,
                 _currencyRateCacheMock.Object,
                 options,
                 _loggerMock.Object

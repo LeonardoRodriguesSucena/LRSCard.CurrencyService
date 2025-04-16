@@ -7,27 +7,48 @@ using LRSCard.CurrencyService.Application.Requests;
 using LRSCard.CurrencyService.Domain;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Data.Common;
 
 namespace LRSCard.CurrencyService.Application
 {
     public class CurrencyExchangeRateService : ICurrencyExchangeRateService
     {
-        private readonly IExchangeRateProvider _exchangeRateProvider;
+        private readonly ICurrencyProviderFactory _currencyProviderFactory;
+
         private readonly ICurrencyRateCache _currencyRateCache;
         private readonly HashSet<string> _currencyCodesNotAllowedInResponse;
         private readonly ILogger<CurrencyExchangeRateService> _logger;
 
         public CurrencyExchangeRateService(
-            IExchangeRateProvider exchangeRateProvider,
+            ICurrencyProviderFactory currencyProviderFactory,
             ICurrencyRateCache currencyRateCache,
             IOptions<CurrencyRulesOptions> currencyRulesOptions,
             ILogger<CurrencyExchangeRateService> logger) 
-        {        
-            _exchangeRateProvider = exchangeRateProvider;
+        {
+            _currencyProviderFactory = currencyProviderFactory;
             _currencyRateCache = currencyRateCache;
             _currencyCodesNotAllowedInResponse = new HashSet<string>(currencyRulesOptions.Value.BlockedCurrencyCodes, StringComparer.OrdinalIgnoreCase);
             _logger = logger;
         }
+
+        /// <summary>
+        /// This method is used to get the exchange rate provider based on the provider type in the service request.
+        /// So we can dynamic pick the provider based on the request.
+        /// </summary>
+        /// <param name="providerType"></param>
+        /// <returns></returns>
+        private IExchangeRateProvider getExchangeRateProvider(CurrencyProviderType providerType)
+        {
+            switch (providerType)
+            {
+                case CurrencyProviderType.Frankfurter:
+                    return _currencyProviderFactory.GetProvider(CurrencyProviderType.Frankfurter);
+                //we can add more providers in the future
+                default:
+                    return _currencyProviderFactory.GetProvider(CurrencyProviderType.Frankfurter);
+            }           
+        }
+
 
         /// <summary>
         /// Retrieves exchange rates for a specific date or the latest available rates.
@@ -45,8 +66,12 @@ namespace LRSCard.CurrencyService.Application
         public async Task<Domain.CurrencyRates> GetExchangeRate(GetExchangeRateRequest request)
         {
             Domain.CurrencyRates? response = null;
-            try { 
-                response = await this._exchangeRateProvider.GetExchangeRate(
+            try {
+
+                //get the correct provider based on the request
+                IExchangeRateProvider exchangeRateProvider = getExchangeRateProvider(request.CurrencyProvider);
+
+                response = await exchangeRateProvider.GetExchangeRate(
                     amount: request.Amount,
                     date: request.Date,
                     baseCurrency: request.BaseCurrency,
@@ -93,7 +118,10 @@ namespace LRSCard.CurrencyService.Application
 
             try
             {
-                response = await this._exchangeRateProvider.GetExchangeRate(
+                //get the correct provider based on the request
+                IExchangeRateProvider exchangeRateProvider = getExchangeRateProvider(request.CurrencyProvider);
+
+                response = await exchangeRateProvider.GetExchangeRate(
                 amount: request.Amount,
                 baseCurrency: request.BaseCurrency,
                 symbols: request.Symbols
@@ -147,6 +175,9 @@ namespace LRSCard.CurrencyService.Application
 
             try
             {
+                //get the correct provider based on the request
+                IExchangeRateProvider exchangeRateProvider = getExchangeRateProvider(request.CurrencyProvider);
+
                 //creating a list with all days
                 int dateRangeInDays = (request.EndDate - request.InitialDate).Days + 1;
 
@@ -169,7 +200,7 @@ namespace LRSCard.CurrencyService.Application
                         continue;
                     }
 
-                    var result = await _exchangeRateProvider.GetExchangeRate(
+                    var result = await exchangeRateProvider.GetExchangeRate(
                         date: date,
                         baseCurrency: request.BaseCurrency
                     );

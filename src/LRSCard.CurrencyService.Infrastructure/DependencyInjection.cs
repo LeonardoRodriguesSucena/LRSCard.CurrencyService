@@ -9,6 +9,8 @@ using LRSCard.CurrencyService.Infrastructure.ExchangeRateProviders.Frankfurter;
 using LRSCard.CurrencyService.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using LRSCard.CurrencyService.Infrastructure.Cache;
+using LRSCard.CurrencyService.Application.Common;
+using LRSCard.CurrencyService.Infrastructure.Factories;
 
 namespace LRSCard.CurrencyService.Infrastructure
 {
@@ -16,19 +18,19 @@ namespace LRSCard.CurrencyService.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            var baseUrl = configuration["ExchangeProvider:Frankfurter:BaseUrl"] ?? "https://api.frankfurter.app";
-
             var resiliencyConfig = configuration
                 .GetSection("ExchangeProviderResiliency")
                 .Get<ExchangeProviderResiliencyOptions>() ?? new ExchangeProviderResiliencyOptions();
 
-            services.AddHttpClient<IExchangeRateProvider, FrankfurterExchangeRateProvider>((provider, client) =>
-            {
-                client.BaseAddress = new Uri(baseUrl);
-            })
+            services.AddHttpClient<FrankfurterExchangeRateProvider>()
             .AddPolicyHandler(GetRetryPolicy(resiliencyConfig))
             .AddPolicyHandler(GetCircuitBreakerPolicy(resiliencyConfig));
 
+            // Register all currency providers, we can add more later
+            services.AddScoped<FrankfurterExchangeRateProvider>();
+
+            // Registering the CurrencyProviderFactory
+            services.AddScoped<ICurrencyProviderFactory, CurrencyProviderFactory>();
 
             //Redis
             services.AddStackExchangeRedisCache(options =>
