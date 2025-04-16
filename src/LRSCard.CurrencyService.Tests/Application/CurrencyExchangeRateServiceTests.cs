@@ -128,12 +128,10 @@ namespace LRSCard.CurrencyService.Tests
             Assert.DoesNotContain("THB", result.Rates.Keys);
         }
 
-        [Fact] 
+        [Fact]
         public async Task GetHistoricalExchangeRatePaginated_ReturnsExpectedData()
         {
             // ------------------ Arrange ------------------
-            // Create a request for historical exchange rates from Jan 1 to Jan 3, 2024
-            // with pagination set to return all 3 days on page 1
             var request = new GetHistoricalExchangeRateRequest
             {
                 BaseCurrency = "USD",
@@ -142,7 +140,6 @@ namespace LRSCard.CurrencyService.Tests
                 Pagination = new Application.Common.Pagination { Page = 1, PageSize = 3 }
             };
 
-            // Mocked currency rate to be returned for each day
             var rate = new CurrencyRates
             {
                 Base = "USD",
@@ -150,29 +147,39 @@ namespace LRSCard.CurrencyService.Tests
                 Rates = new Dictionary<string, float> { { "EUR", 0.85f } }
             };
 
-            // Setup the exchange rate provider to always return the same `rate` object
-            // regardless of the specific date provided (simplified for the test)
-            _exchangeRateProviderMock
-                .Setup(x => x.GetExchangeRate(1, It.IsAny<DateTime>(), "USD", null))
-                .ReturnsAsync(rate);
+            //setup the _exchangeRateProvider to return the rate for each date
+            _exchangeRateProviderMock.Setup(x => x.GetExchangeRate(
+                    It.IsAny<float?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<string?>(),
+                    It.IsAny<List<string>?>()))
+                .ReturnsAsync((float? amount, DateTime? date, string? baseCurrency, List<string>? symbols) =>
+                {
+                    return new CurrencyRates
+                    {
+                        Base = baseCurrency ?? "USD",
+                        Amount = amount ?? 1,
+                        Date = date ?? DateTime.UtcNow,
+                        Rates = new Dictionary<string, float>
+                        {
+                            { "EUR", 0.85f + (float)((date?.Day ?? 0) * 0.001f) } 
+                        }
+                    };
+                });
 
-            // Setup the cache mock to return null for all dates,
-            // forcing the service to call the exchange rate provider
+            //setup the cache to return null, to simulate that the data is not in the cache forcing the service to get it from the provider
             _currencyRateCacheMock
                 .Setup(x => x.GetAsync(It.IsAny<DateTime>(), "USD"))
-                .ReturnsAsync((CurrencyRates)null);
+                .ReturnsAsync((CurrencyRates) null);
 
             // ------------------ Act ------------------
-            // Call the method under test
             var result = await _service.GetHistoricalExchangeRatePaginated(request);
 
             // ------------------ Assert ------------------
-            // Verify that the result contains exactly 3 rate entries (1 for each day)
             Assert.Equal(3, result.Items.Count);
-
-            // Verify that the total count of date entries is correct (Jan 1 to Jan 3 = 3 days)
             Assert.Equal(3, result.TotalCount);
         }
+
 
     }
 }
