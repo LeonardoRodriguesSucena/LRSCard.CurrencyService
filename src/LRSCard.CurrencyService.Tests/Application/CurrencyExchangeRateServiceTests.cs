@@ -132,6 +132,8 @@ namespace LRSCard.CurrencyService.Tests
         public async Task GetHistoricalExchangeRatePaginated_ReturnsExpectedData()
         {
             // ------------------ Arrange ------------------
+
+            //preparing the request
             var request = new GetHistoricalExchangeRateRequest
             {
                 BaseCurrency = "USD",
