@@ -10,6 +10,7 @@ using LRSCard.CurrencyService.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Castle.Components.DictionaryAdapter.Xml;
 
 namespace LRSCard.CurrencyService.Tests
 {
@@ -22,9 +23,12 @@ namespace LRSCard.CurrencyService.Tests
 
         public CurrencyExchangeRateServiceTests()
         {
+            //Initializing the service with mocked values to be able to apply the rules
+            //I will not get them from config, because I want them here to let the rule explicitly in this test class
             var options = Options.Create(new CurrencyRulesOptions
             {
-                BlockedCurrencyCodes = new List<string> { "MXN" }
+                ValidCurrencyCodes = new List<string> {"USD", "GBP", "AUD", "BGN", "BRL", "EUR", "TRY", "PLN", "THB", "MXN" },
+                BlockedCurrencyCodes = new List<string> { "TRY", "PLN", "THB", "MXN" },
             });
 
             _service = new CurrencyExchangeRateService(
@@ -38,7 +42,7 @@ namespace LRSCard.CurrencyService.Tests
         [Fact]
         public async Task GetExchangeRate_ReturnsExpectedResult()
         {
-            // Arrange
+            // ------------------ Arrange ------------------
             // Creates a request object that simulates a request for exchange rates
             var request = new GetExchangeRateRequest
             {
@@ -63,11 +67,11 @@ namespace LRSCard.CurrencyService.Tests
                 .Setup(x => x.GetExchangeRate(1, request.Date, "USD", request.Symbols))
                 .ReturnsAsync(expected);
 
-            // Act
+            // ------------------ Act ------------------
             // Call the actual method under test
             var result = await _service.GetExchangeRate(request);
 
-            // Assert
+            // ------------------ Assert ------------------
 
             // Check that the result is not null
             Assert.NotNull(result);
@@ -77,16 +81,16 @@ namespace LRSCard.CurrencyService.Tests
             Assert.Equal(expected.Rates.Count, result.Rates.Count);
         }
 
-        [Fact] // Marks this method as a unit test
+        [Fact]
         public async Task GetCurrencyConvertion_FiltersBlockedCurrencies()
         {
-            // Arrange
+            // ------------------ Arrange ------------------
             // Create a conversion request for 100 USD to EUR and MXN
             var request = new GetCurrencyConversionRequest
             {
                 Amount = 100,
                 BaseCurrency = "USD",
-                Symbols = new List<string> { "EUR", "MXN" } // MXN is expected to be filtered
+                Symbols = new List<string>(), // No input symbols, so it is expected in the result to get all currencies 
             };
 
             // Simulate the external exchange provider returning rates for both EUR and MXN
@@ -96,8 +100,11 @@ namespace LRSCard.CurrencyService.Tests
                 Base = "USD",
                 Rates = new Dictionary<string, float>
                 {
-                    { "EUR", 0.85f },  // Acceptable currency
-                    { "MXN", 0.002f }  // Blocked currency
+                    { "EUR", 0.01f },  // Acceptable currency
+                    { "CAD", 0.012f }, // Acceptable currency
+                    { "MXN", 0.02f },  // Blocked currency
+                    { "PLN", 0.03f },  // Blocked currency
+                    { "THB", 0.04f }   // Blocked currency
                 }
             };
 
@@ -106,25 +113,24 @@ namespace LRSCard.CurrencyService.Tests
                 .Setup(x => x.GetExchangeRate(100, null, "USD", request.Symbols))
                 .ReturnsAsync(rates);
 
-            // Act
-
+            // ------------------ Act ------------------
             // Call the actual service method
             var result = await _service.GetCurrencyConvertion(request);
 
-            // Assert
-
+            // ------------------ Assert ------------------
             // Assert that only one currency remains in the filtered result
             Assert.Single(result.Rates);
 
-            // Assert that MXN has been filtered out from the response
+            // Assert that MXN,PLN,THB has been filtered out from the response
             Assert.DoesNotContain("MXN", result.Rates.Keys);
+            Assert.DoesNotContain("PLN", result.Rates.Keys);
+            Assert.DoesNotContain("THB", result.Rates.Keys);
         }
 
         [Fact] 
         public async Task GetHistoricalExchangeRatePaginated_ReturnsExpectedData()
         {
-            // Arrange
-
+            // ------------------ Arrange ------------------
             // Create a request for historical exchange rates from Jan 1 to Jan 3, 2024
             // with pagination set to return all 3 days on page 1
             var request = new GetHistoricalExchangeRateRequest
@@ -146,7 +152,7 @@ namespace LRSCard.CurrencyService.Tests
             // Setup the exchange rate provider to always return the same `rate` object
             // regardless of the specific date provided (simplified for the test)
             _exchangeRateProviderMock
-                .Setup(x => x.GetExchangeRate(1, new DateTime(), "USD", null))
+                .Setup(x => x.GetExchangeRate(1, It.IsAny<DateTime>(), "USD", null))
                 .ReturnsAsync(rate);
 
             // Setup the cache mock to return null for all dates,
@@ -155,13 +161,11 @@ namespace LRSCard.CurrencyService.Tests
                 .Setup(x => x.GetAsync(It.IsAny<DateTime>(), "USD"))
                 .ReturnsAsync((CurrencyRates)null);
 
-            // Act
-
+            // ------------------ Act ------------------
             // Call the method under test
             var result = await _service.GetHistoricalExchangeRatePaginated(request);
 
-            // Assert
-
+            // ------------------ Assert ------------------
             // Verify that the result contains exactly 3 rate entries (1 for each day)
             Assert.Equal(3, result.Items.Count);
 

@@ -18,80 +18,119 @@ namespace LRSCard.CurrencyService.API.Controllers
     public class ExchangeRatesController : ControllerBase
     {
         private readonly ICurrencyExchangeRateService _currencyExchangeRateService;
+        private ILogger<ExchangeRatesController> _logger;
 
-        public ExchangeRatesController(ICurrencyExchangeRateService currencyExchangeRateService)
+        public ExchangeRatesController(ICurrencyExchangeRateService currencyExchangeRateService, ILogger<ExchangeRatesController> logger)
         {
             _currencyExchangeRateService = currencyExchangeRateService;
+            _logger = logger;
         }
 
         [HttpGet("latest")]
+        [ProducesResponseType(typeof(CurrencyRatesDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetLatest([FromQuery] GetLastestCurrencyRequestDTO request)
         {
-            var response = await _currencyExchangeRateService.GetExchangeRate(new GetExchangeRateRequest{ BaseCurrency = request.BaseCurrency});
-            CurrencyRatesDTO dto = new CurrencyRatesDTO
-            {
-                Amount = response.Amount,
-                BaseCurrency = response.Base,
-                Date = response.Date,
-                TargetCurrencies = response.Rates
-            };
+            try {
+                var response = await _currencyExchangeRateService.GetExchangeRate(new GetExchangeRateRequest { BaseCurrency = request.BaseCurrency });
+                CurrencyRatesDTO dto = new CurrencyRatesDTO
+                {
+                    Amount = response.Amount,
+                    BaseCurrency = response.Base,
+                    Date = response.Date,
+                    TargetCurrencies = response.Rates
+                };
 
-            return Ok(dto);
+                return Ok(dto);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetLatest operation");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.Please try again later.");
+            }
+
+
         }
 
         [HttpGet("history")]
+        [ProducesResponseType(typeof(PaginationResultDTO<CurrencyRatesDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByPeriod([FromQuery] GetHistoricalExchangeRateRequestDTO request)
         {
-            var serviceRequest = new GetHistoricalExchangeRateRequest
+            try
             {
-                BaseCurrency = request.BaseCurrency,
-                InitialDate = request.InitialDate,
-                EndDate = request.EndDate,
-                Pagination = new Application.Common.Pagination
+                var serviceRequest = new GetHistoricalExchangeRateRequest
                 {
-                    Page = request.Page,
-                    PageSize = request.PageSize
-                }
-            };
+                    BaseCurrency = request.BaseCurrency,
+                    InitialDate = request.InitialDate,
+                    EndDate = request.EndDate,
+                    Pagination = new Application.Common.Pagination
+                    {
+                        Page = request.Page,
+                        PageSize = request.PageSize
+                    }
+                };
 
-            var serviceResponse = await _currencyExchangeRateService.GetHistoricalExchangeRatePaginated(serviceRequest);
+                var serviceResponse = await _currencyExchangeRateService.GetHistoricalExchangeRatePaginated(serviceRequest);
 
-            var dto = new LRSCard.CurrencyService.API.DTOs.Common.PaginationResultDTO<CurrencyRatesDTO>
-            {
-                TotalCount = serviceResponse.TotalCount,
-                Page = serviceResponse.Page,
-                PageSize = serviceResponse.PageSize,
-                Items = serviceResponse.Items.Select(x => new CurrencyRatesDTO{
+                var dto = new LRSCard.CurrencyService.API.DTOs.Common.PaginationResultDTO<CurrencyRatesDTO>
+                {
+                    TotalCount = serviceResponse.TotalCount,
+                    Page = serviceResponse.Page,
+                    PageSize = serviceResponse.PageSize,
+                    Items = serviceResponse.Items.Select(x => new CurrencyRatesDTO
+                    {
                         Amount = x.Amount,
                         BaseCurrency = x.Base,
                         Date = x.Date,
                         TargetCurrencies = x.Rates
-                }).ToList()
-            };
+                    }).ToList()
+                };
 
-            return Ok(dto);
+                return Ok(dto);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetByPeriod operation");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.Please try again later.");
+            }            
         }
 
         [HttpPost("convert")]
+        [ProducesResponseType(typeof(CurrencyRatesDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCurrencyConversion([FromBody] GetCurrencyConversionRequestDTO request)
         {
-            var serviceRequest = new GetCurrencyConversionRequest 
-            { 
-                Amount = request.Amount, 
-                BaseCurrency = request.BaseCurrency, 
-                Symbols = request.DestinationCurrencies
-            };
-            var response = await _currencyExchangeRateService.GetCurrencyConvertion(serviceRequest);
-
-            CurrencyRatesDTO dto = new CurrencyRatesDTO
+            try
             {
-                Amount = response.Amount,
-                BaseCurrency = response.Base,
-                Date = response.Date,
-                TargetCurrencies = response.Rates
-            };
+                var serviceRequest = new GetCurrencyConversionRequest
+                {
+                    Amount = request.Amount,
+                    BaseCurrency = request.BaseCurrency,
+                    Symbols = request.DestinationCurrencies
+                };
+                var response = await _currencyExchangeRateService.GetCurrencyConvertion(serviceRequest);
 
-            return Ok(dto);
+                CurrencyRatesDTO dto = new CurrencyRatesDTO
+                {
+                    Amount = response.Amount,
+                    BaseCurrency = response.Base,
+                    Date = response.Date,
+                    TargetCurrencies = response.Rates
+                };
+
+                return Ok(dto);
+
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetCurrencyConversion operation");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.Please try again later.");
+            }            
         }
 
 
