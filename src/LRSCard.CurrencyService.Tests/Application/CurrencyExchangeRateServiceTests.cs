@@ -119,7 +119,8 @@ namespace LRSCard.CurrencyService.Tests
 
             // ------------------ Assert ------------------
             // Assert that only one currency remains in the filtered result
-            Assert.Single(result.Rates);
+            Assert.Contains("EUR", result.Rates.Keys);
+            Assert.Contains("CAD", result.Rates.Keys);
 
             // Assert that MXN,PLN,THB has been filtered out from the response
             Assert.DoesNotContain("MXN", result.Rates.Keys);
