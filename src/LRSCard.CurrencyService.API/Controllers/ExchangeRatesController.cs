@@ -30,6 +30,7 @@ namespace LRSCard.CurrencyService.API.Controllers
         [HttpGet("latest")]
         [ProducesResponseType(typeof(CurrencyRatesDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetLatest([FromQuery] GetLastestCurrencyRequestDTO request)
         {
@@ -62,6 +63,7 @@ namespace LRSCard.CurrencyService.API.Controllers
         [HttpGet("history")]
         [ProducesResponseType(typeof(PaginationResultDTO<CurrencyRatesDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByPeriod([FromQuery] GetHistoricalExchangeRateRequestDTO request)
         {
@@ -109,6 +111,7 @@ namespace LRSCard.CurrencyService.API.Controllers
         [HttpPost("convert")]
         [ProducesResponseType(typeof(CurrencyRatesDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCurrencyConversion([FromBody] GetCurrencyConversionRequestDTO request)
         {

@@ -15,14 +15,14 @@ namespace LRSCard.CurrencyService.API.Validations
             RuleFor(x => x.InitialDate)
                 .NotEmpty().WithMessage("initialDate is required.")
                 .LessThanOrEqualTo(x => DateTime.Now)
-                .WithMessage("initialDate must be less than or equal currentDate.");
+                .WithMessage("initialDate must be less than or equal current date.");
 
             RuleFor(x => x.EndDate)
                 .NotEmpty().WithMessage("endDate is required.")
                 .GreaterThanOrEqualTo(x => x.InitialDate)
                 .WithMessage("endDate must be greater or equal to initialDate.")
                 .LessThanOrEqualTo(x => DateTime.Now)
-                .WithMessage("endDate must be less than or equal currentDate.");
+                .WithMessage("endDate must be less than or equal current date.");
 
             RuleFor(x => x.Page)
                 .GreaterThan(0).WithMessage("page must be greater than 0.");
