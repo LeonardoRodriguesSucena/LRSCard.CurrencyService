@@ -89,7 +89,7 @@ Response:
       "targetCurrencies": {
         "BGN": 1.7224,
         "BRL": 5.8715,
-        "CAD": 1.3921,
+        "CAD": 1.3921
       }
     }
   ],
@@ -147,10 +147,10 @@ To check the logs, you can use the Seq server. <br>
 
 The API will be acessible in:<br>
 <a href="http://localhost:8080/api/v1.0/auth/login" target="_blank">
-         http://localhost:8080/api/v1.0/auth/login</a><br>
+         http://localhost:8080/api/v1.0/auth/login</a>  --example with login operation 
 
 <a href="http://localhost:8080/api/v1.0/exchange-rates/latest" target="_blank">
-         http://localhost:8080/api/v1.0/exchange-rates/latest</a><br> --example with operation
+         http://localhost:8080/api/v1.0/exchange-rates/latest</a> --example with latest operation <br>
 
 To access the API operations, you need to get the AccessToken using the auth/login endpoint. <br>
 You can use any login and password, it will return the AccessToken with admin role.<br>
