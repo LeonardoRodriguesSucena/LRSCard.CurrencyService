@@ -34,7 +34,7 @@ This information must be the most updated, so there is no cache involved in this
 
 <h3>2) Currency Conversion:</h3>
 Convert amounts between different currencies using the lastest exchange rates.
-This operation also bypasses caching for real-time accuracy.
+This operation also bypasses caching for real-time accuracy.</br>
 <b>Remarks:</b>
 The ExchangeProvider(Frankfurter) can do the conversion natively, so I am using it. No extra calculations needed for now.</br>
 This could change if additional providers are added in the future.
