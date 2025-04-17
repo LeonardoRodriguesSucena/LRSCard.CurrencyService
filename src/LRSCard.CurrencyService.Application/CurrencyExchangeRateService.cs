@@ -193,6 +193,19 @@ namespace LRSCard.CurrencyService.Application
                 var results = new List<CurrencyRates>();
                 foreach (var date in pagedDates)
                 {
+                    ///for the current day, do not check or save in cache because this information needs to be the most updated
+                    ///so it will call direct the exchangeRateProvider
+                    if (date.Date >= DateTime.Now.Date)
+                    {
+                        var currentDayResult = await exchangeRateProvider.GetExchangeRate(
+                                                                        date: date,
+                                                                        baseCurrency: request.BaseCurrency
+                                                                        );
+                        currentDayResult.Date = date;
+                        results.Add(currentDayResult);
+                        continue;
+                    }
+
                     var cached = await _currencyRateCache.GetAsync(date, request.BaseCurrency);
                     if (cached != null)
                     {

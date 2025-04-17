@@ -13,12 +13,16 @@ namespace LRSCard.CurrencyService.API.Validations
                 .WithMessage(x => $"baseCurrency '{x.BaseCurrency}' is not valid or not supported.");                
 
             RuleFor(x => x.InitialDate)
-                .NotEmpty().WithMessage("initialDate is required.");
+                .NotEmpty().WithMessage("initialDate is required.")
+                .LessThanOrEqualTo(x => DateTime.Now)
+                .WithMessage("initialDate must be less than or equal currentDate.");
 
             RuleFor(x => x.EndDate)
                 .NotEmpty().WithMessage("endDate is required.")
                 .GreaterThanOrEqualTo(x => x.InitialDate)
-                .WithMessage("endDate must be greater or equal to initialDate.");
+                .WithMessage("endDate must be greater or equal to initialDate.")
+                .LessThanOrEqualTo(x => DateTime.Now)
+                .WithMessage("endDate must be less than or equal currentDate.");
 
             RuleFor(x => x.Page)
                 .GreaterThan(0).WithMessage("page must be greater than 0.");
