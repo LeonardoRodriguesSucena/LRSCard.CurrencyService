@@ -15,9 +15,9 @@ For ease of setup and testing, the necessary configuration files are included in
 Return the current exchange rate for the desired baseCurrency. 
 This information must be the most updated, so there is no cache involved in this operation.
 
-Endpoint: Get: `http://localhost:8080/api/v1.0/exchange-rates/lastest` </br>
-Payload: baseCurrency=USD, provider=Frankfurter</br>
-Response: 
+**Endpoint**: Get: `http://localhost:8080/api/v1.0/exchange-rates/lastest` </br>
+**Query**: baseCurrency=USD, provider=Frankfurter</br>
+**Response**: 
 ```json
 {
   "amount": 1,
@@ -34,14 +34,14 @@ Response:
 
 <h3>2) Currency Conversion:</h3>
 Convert amounts between different currencies using the lastest exchange rates.
-This information must be the most updated, so there is no cache involved in this operation.<br><br>
+This operation also bypasses caching for real-time accuracy.
 <b>Remarks:</b>
-The ExchangeProvider(Frankfurter) can do the conversion out of the box, so I am using it. No extra calculations needed for now.</br>
-Maybe in the future adding others ExchangeProviders, we need to implement this extra logic.</br>
+The ExchangeProvider(Frankfurter) can do the conversion natively, so I am using it. No extra calculations needed for now.</br>
+This could change if additional providers are added in the future.
 For now it is not necessary, so I prefered to keep it simple.</br></br>
 
-Endpoint: Post: `http://localhost:8080/api/v1.0/exchange-rates/convert` </br>
-Payload: 
+**Endpoint**: Post: `http://localhost:8080/api/v1.0/exchange-rates/convert` </br>
+**Payload**: 
 ```json
 {
   "amount": 1,
@@ -68,12 +68,12 @@ Response:
 ```
 
 <h3>3) Historical Exchange Rates with Pagination:</h3>
-This operation return the exchange rate for a date range. <br>
-This operation use cache strategy caching the past requested days, once this data don't change anymore.</br>
-For today's exchange rate, the cache is not used.</br></br>
+Returns exchange rates for a date range. <br>
+This operation uses caching for past dates to improve performance.
+For today's exchange rates, the cache is not used.</br></br>
 
-Endpoint: get: `http://localhost:8080/api/v1.0/exchange-rates/history` <br/>
-Payload: baseCurrency=USD, initialDate=2024-01-01, endDate=2024-01-30, page=1, pageSize=10,  provider=Frankfurter
+**Endpoint**: get: `http://localhost:8080/api/v1.0/exchange-rates/history` <br/>
+**Query**: baseCurrency=USD&initialDate=2024-01-01&endDate=2024-01-30&page=1&pageSize=10&provider=Frankfurter
 
 Response:
 ```json
@@ -108,24 +108,25 @@ Response:
   - enabling multiple service instances to use the same cache source
 - ✅ JWT-based Authentication & RBAC
   - all operations are protected by JWT authentication and role-based access control (RBAC). 
-  - To get an valid access token, you need to use the /auth/login endpoint. See more in Setup Instructions section.
+  - To get an valid access token, you need to use the /auth/login endpoint. See more in <b>Setup Instructions</b> below.
 - ✅ API Rate Limiting
   - The API is protected by rateLimiting and there are 2 policies totally configurable in config file:<br>
-    - <b>default</b>: for authenticated user (it is less restrictive)<br>
-    - <b>anonynoys</b>: for unauthenticated user, for example to use /auth/login endpoint to get the acessToken to use the other operations.
-      <br>Remark:</b> To keep the API simple to use, I am not asking for an <b>API key</b> to enable access to <b>/auth</b> operations, but it should exist in an real-world scenario.
-- ✅ Circuit breaker & Retry policies with exponential backoff
-  - Circuit breaker implemented to avoid overloading the external service (Frankfurter) in case of failure.
-  - ExchangeProviderResiliency parameters are configurable in the appsettings.json file for all ExchangeProviders.
-- ✅ API versioning
+    - `default`: for authenticated user (it is less restrictive)<br>
+    - `anonynoys`: for unauthenticated user, for example to use /auth/login endpoint to get the acessToken to use the other operations.<br>
+    ⚠️<i>To keep the API simple to use, I am not asking for an <b>API key</b> to enable access to <b>/auth</b> operations, but it should exist in an real-world scenario.</i>
+- ✅ Circuit Breaker & Retry Policies with Exponential Backoff
+  - Circuit breaker implemented to avoid overloading the external service (`Frankfurter`) in case of failure.
+  - `ExchangeProviderResiliency` parameters are configurable in the `appsettings.json` file for all ExchangeProviders.
+- ✅ Environment-specific configurations
+  - Application is configured to run in multiple environments (`Development`, `Staging`, `Production`) using a cfg for each environment.
 - ✅ Horizontal Scaling
   -  API is configured to be horizontally scalable, so you can run multiple instances of the API behind a load balancer.
+- ✅ API versioning
 - ✅ Structured logging using Serilog + Seq and Distributed Tracing
   - For logging, I am using Serilog with Seq. So It is possible to track the request over all layers using the CorrelationId.<br>
   - User information like UserID(Login), SUB, IP, etc... is also injected in the logs. </br>
-  Seq server:<br>
-  - `http://localhost:5341`
-- ✅ Basic Tests implemented (unit & integration) with XUnit and Moq.
+  Seq server: `http://localhost:5341`
+- ✅ Unit & Integration Tests implemented with `XUnit` and `Moq`.
 - ✅ Swagger documentation with JWT auth.
 
 ---
@@ -134,6 +135,7 @@ Response:
 To clone the repository, run the following command in your terminal:
 ```bash
 git clone http://github.com/LeonardoRodriguesSucena/LRSCard.CurrencyService.git
+cd LRSCard.CurrencyService
 ```
 
 The application is Dockerized, so you need <b>Docker</b> installed and running.
@@ -142,11 +144,11 @@ Once you cloned the repository, open the project folder and execute in cmd or po
 ```bash
 docker compose up --build
 ```
-You can use Swagger to test:<br>
+You can use **Swagger** to test:<br>
 <a href="http://localhost:8080/swagger" target="_blank">
          http://localhost:8080/swagger</a><br>    
 
-To check the logs, you can use the Seq server. <br>
+To check the logs, you can use the **Seq Dashboard**. <br>
 <a href="http://localhost:5341" target="_blank">
          http://localhost:5341</a><br>
 
