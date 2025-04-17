@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using LRSCard.CurrencyService.Application.Interfaces;
 using Microsoft.AspNetCore.WebUtilities;
@@ -16,6 +17,12 @@ namespace LRSCard.CurrencyService.Infrastructure.ExchangeRateProviders.Frankfurt
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(configuration["ExchangeProvider:Frankfurter:BaseUrl"]);
+            
+            //configuring the provider timeout
+            string? timeoutSetting = configuration["ExchangeProviderResiliency:TimeoutInSeconds"];
+            var timeoutSeconds = int.TryParse(timeoutSetting, out var parsedTimeout) ? parsedTimeout : 30;
+            _httpClient.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
+
             _logger = logger;
         }
 

@@ -8,6 +8,7 @@ namespace LRSCard.CurrencyService.Infrastructure.Options
 {
     public class ExchangeProviderResiliencyOptions
     {
+        public int TimeoutInSeconds { get; set; } = 30;
         public int RetryCount { get; set; } = 3;
         public int InitialBackoffSeconds { get; set; } = 2;
         public int CircuitBreakerFailureThreshold { get; set; } = 2;
