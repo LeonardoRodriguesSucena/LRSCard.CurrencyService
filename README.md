@@ -1,6 +1,6 @@
 ﻿## 💱 Currency Service API
 
-Author <a href="https://www.linkedin.com/in/leonardorodriguessucena/">Leonardo Rodrigues Sucena</a>. 
+Author <a href="https://www.linkedin.com/in/leonardorodriguessucena/" target="_blank">Leonardo Rodrigues Sucena</a>. 
 
 This is a robust and extensible .NET 8 Web API that provides real-time, historical and conversion currency exchange rates. 
 The service uses a pluggable provider architecture (factory pattern) and supports caching, JWT authentication, rate limiting, structured logging and testing.
@@ -15,7 +15,7 @@ For ease of setup and testing, the necessary configuration files are included in
 Return the current exchange rate for the desired baseCurrency. 
 This information must be the most updated, so there is no cache involved in this operation.
 
-Endpoint: Get: http://localhost:8080/api/v1.0/exchange-rates/lastest </br>
+Endpoint: Get: `http://localhost:8080/api/v1.0/exchange-rates/lastest` </br>
 Payload: baseCurrency=USD, provider=Frankfurter</br>
 Response: 
 ```json
@@ -41,7 +41,7 @@ The ExchangeProvider(Frankfurter) can do the conversion out of the box, so I am 
 Maybe in the future adding others ExchangeProviders, we need to implement this extra logic.</br>
 For now it is not necessary, so I prefered to keep it simple.</br></br>
 
-Endpoint: Post: http://localhost:8080/api/v1.0/exchange-rates/convert </br>
+Endpoint: Post: `http://localhost:8080/api/v1.0/exchange-rates/convert` </br>
 Payload: 
 ```json
 {
@@ -73,7 +73,7 @@ This operation return the exchange rate for a date range. <br>
 This operation use cache strategy caching the past requested days, once this data don't change anymore.</br>
 For today's exchange rate, the cache is not used.</br></br>
 
-Endpoint: get: http://localhost:8080/api/v1.0/exchange-rates/history <br/>
+Endpoint: get: `http://localhost:8080/api/v1.0/exchange-rates/history` <br/>
 Payload: baseCurrency=USD, initialDate=2024-01-01, endDate=2024-01-30, page=1, pageSize=10,  provider=Frankfurter
 
 Response:
@@ -120,7 +120,7 @@ Response:
   - For logging, I am using Serilog with Seq. So It is possible to track the request over all layers using the CorrelationId.<br>
   - User information like UserID(Login), SUB, IP, etc... is also injected in the logs. </br>
   Seq server:<br>
-  - http://localhost:5341
+  - `http://localhost:5341`
 - ✅ Basic Tests implemented (unit & integration) with XUnit and Moq.
 - ✅ Swagger documentation with JWT auth.
 
@@ -139,14 +139,19 @@ Once you cloned the repository, open the project folder and execute in cmd or po
 docker compose up --build
 ```
 You can use Swagger to test:<br>
-http://localhost:8080/swagger
+<a href="http://localhost:8080/swagger" target="_blank">
+         http://localhost:8080/swagger</a><br>    
 
 To check the logs, you can use the Seq server. <br>
-http://localhost:5341
+<a href="http://localhost:5341" target="_blank">
+         http://localhost:5341</a><br>
 
 The API will be acessible in:<br>
-http://localhost:8080/api/v1.0/auth/login <br>
-http://localhost:8080/api/v1.0/exchange-rates/latest --example with operation
+<a href="http://localhost:8080/api/v1.0/auth/login" target="_blank">
+         http://localhost:8080/api/v1.0/auth/login</a><br>
+
+<a href="http://localhost:8080/api/v1.0/exchange-rates/latest" target="_blank">
+         http://localhost:8080/api/v1.0/exchange-rates/latest</a><br> --example with operation
 
 To access the API operations, you need to get the AccessToken using the auth/login endpoint. <br>
 You can use any login and password, it will return the AccessToken with admin role.<br>
