@@ -59,6 +59,7 @@ namespace LRSCard.CurrencyService.Application
         /// - <c>Date</c>: (optional) The specific date for historical data. If null, the latest rates will be fetched.
         /// - <c>BaseCurrency</c>: (required) The base currency code (e.g., "USD", "EUR").
         /// - <c>Symbols</c>: (optional) A list of target currency codes to filter the results.
+        /// - <c>CurrencyProvider</c>: (optional) currency provider
         /// </param>
         /// <returns>
         /// A <see cref="Domain.CurrencyRates"/> object containing the exchange rate information for the given parameters.
@@ -108,6 +109,7 @@ namespace LRSCard.CurrencyService.Application
         /// - <c>Amount</c>: (required) The amount to convert.
         /// - <c>BaseCurrency</c>: (required) The base currency code (e.g., "USD", "EUR").
         /// - <c>Symbols</c>: (required) A list of target currency codes to filter the results.
+        /// - <c>CurrencyProvider</c>: (optional) currency provider
         /// </param>
         /// <returns>
         /// A <see cref="Domain.CurrencyRates"/> object containing the exchange rate information for the given parameters.
@@ -165,6 +167,7 @@ namespace LRSCard.CurrencyService.Application
         /// - <c>BaseCurrency</c>: (required) The base currency code (e.g., "USD", "EUR").
         /// - <c>Symbols</c>: A list of target currency codes to filter the results.
         /// - <c>Pagination</c>: Pagination configuration.
+        /// - <c>CurrencyProvider</c>: (optional) currency provider
         /// </param>
         /// <returns>
         /// Paginated CurrencyRates PaginationResult<CurrencyRates>.

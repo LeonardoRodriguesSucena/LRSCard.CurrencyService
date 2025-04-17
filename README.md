@@ -110,7 +110,7 @@ Response:
   - all operations are protected by JWT authentication and role-based access control (RBAC). 
   - To get an valid access token, you need to use the `/auth/login` endpoint. See more in <b>Setup Instructions</b>.
 - ✅**API Rate Limiting**
-  - The API is protected by rateLimiting and there are 2 policies totally configurable in config file:<br>
+  - The API is protected by rate limiting and there are 2 policies totally configurable in config file:<br>
     - `default`: for authenticated user (it is less restrictive)<br>
     - `anonynoys`: for unauthenticated user, for example to use /auth/login endpoint to get the acessToken to use the other operations.<br>
     ⚠️<i>To keep the API simple to use, I am not asking for an <b>API key</b> to enable access to <b>/auth</b> operations, but it should exist in an real-world scenario.</i>
