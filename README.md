@@ -159,7 +159,7 @@ The API will be accessible in:<br>
 
 ## 🔐 Authentication
 
-To access the API operations, you need to get the `AccessToken` using the `v1/auth/login` endpoint. <br>
+To access the API operations, you need to get the `AccessToken` using the `v1.0/auth/login` endpoint. <br>
 You can use any login and password, it will return the AccessToken with admin role.<br><br>
 **Endpoint**: POST:  `http://localhost:8080/api/v1.0/auth/login` <br>
 **Payload:**
