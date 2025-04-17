@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using LRSCard.CurrencyService.Infrastructure.Cache;
 using LRSCard.CurrencyService.Application.Common;
 using LRSCard.CurrencyService.Infrastructure.Factories;
+using Microsoft.Extensions.Logging;
 
 namespace LRSCard.CurrencyService.Infrastructure
 {
@@ -23,8 +24,16 @@ namespace LRSCard.CurrencyService.Infrastructure
                 .Get<ExchangeProviderResiliencyOptions>() ?? new ExchangeProviderResiliencyOptions();
 
             services.AddHttpClient<FrankfurterExchangeRateProvider>()
-            .AddPolicyHandler(GetRetryPolicy(resiliencyConfig))
-            .AddPolicyHandler(GetCircuitBreakerPolicy(resiliencyConfig));
+            .AddPolicyHandler((sp, _) =>
+            {
+                var logger = sp.GetRequiredService<ILogger<FrankfurterExchangeRateProvider>>();
+                return GetRetryPolicy(resiliencyConfig, logger);
+            })
+            .AddPolicyHandler((sp, _) =>
+            {
+                var logger = sp.GetRequiredService<ILogger<FrankfurterExchangeRateProvider>>();
+                return GetCircuitBreakerPolicy(resiliencyConfig, logger);
+            });
 
             // Register all currency providers, we can add more later
             services.AddScoped<FrankfurterExchangeRateProvider>();
@@ -45,7 +54,7 @@ namespace LRSCard.CurrencyService.Infrastructure
 
         /// This method configures a retry policy using Polly for transient HTTP errors.
         /// It retries the request up to 3 times with an exponential backoff strategy.(Default values)
-        private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(ExchangeProviderResiliencyOptions options)
+        private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(ExchangeProviderResiliencyOptions options, ILogger logger)
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
@@ -55,7 +64,7 @@ namespace LRSCard.CurrencyService.Infrastructure
                         TimeSpan.FromSeconds(Math.Pow(options.InitialBackoffSeconds, attempt)),
                     onRetry: (outcome, delay, attempt, _) =>
                     {
-                        Console.WriteLine($"Retry {attempt} after {delay.TotalSeconds}s due to: {outcome.Exception?.Message ?? outcome.Result?.StatusCode.ToString()}");
+                        logger.LogWarning($"Retry {attempt} after {delay.TotalSeconds}s due to: {outcome.Exception?.Message ?? outcome.Result?.StatusCode.ToString()}");
                     });
         }
 
@@ -64,7 +73,7 @@ namespace LRSCard.CurrencyService.Infrastructure
         /// 2 attempts before breaking the circuit for 30 seconds(Default values).
         /// </summary>
         /// <returns></returns>
-        private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(ExchangeProviderResiliencyOptions options)
+        private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(ExchangeProviderResiliencyOptions options, ILogger logger)
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
@@ -72,11 +81,11 @@ namespace LRSCard.CurrencyService.Infrastructure
                     handledEventsAllowedBeforeBreaking: options.CircuitBreakerFailureThreshold,
                     durationOfBreak: TimeSpan.FromSeconds(options.CircuitBreakerDurationInSeconds),
                     onBreak: (outcome, delay) =>
-                        Console.WriteLine($"Circuit opened for {delay.TotalSeconds}s due to: {outcome.Exception?.Message ?? outcome.Result?.StatusCode.ToString()}"),
+                        logger.LogWarning($"Circuit opened for {delay.TotalSeconds}s due to: {outcome.Exception?.Message ?? outcome.Result?.StatusCode.ToString()}"),
                     onReset: () =>
-                        Console.WriteLine("Circuit closed."),
+                        logger.LogWarning("Circuit closed."),
                     onHalfOpen: () =>
-                        Console.WriteLine("Circuit is half-open, testing...")
+                        logger.LogWarning("Circuit is half-open, testing...")
                 );
         }
     }

@@ -114,7 +114,12 @@ Response:
     - <b>default</b>: for authenticated user (it is less restrictive)<br>
     - <b>anonynoys</b>: for unauthenticated user, for example to use /auth/login endpoint to get the acessToken to use the other operations.
       <br>Remark:</b> To keep the API simple to use, I am not asking for an <b>API key</b> to enable access to <b>/auth</b> operations, but it should exist in an real-world scenario.
-
+- ✅ Circuit breaker & Retry policies with exponential backoff
+  - Circuit breaker implemented to avoid overloading the external service (Frankfurter) in case of failure.
+  - ExchangeProviderResiliency parameters are configurable in the appsettings.json file for all ExchangeProviders.
+- ✅ API versioning
+- ✅ Horizontal Scaling
+  -  API is configured to be horizontally scalable, so you can run multiple instances of the API behind a load balancer.
 - ✅ Structured logging using Serilog + Seq and Distributed Tracing
   - For logging, I am using Serilog with Seq. So It is possible to track the request over all layers using the CorrelationId.<br>
   - User information like UserID(Login), SUB, IP, etc... is also injected in the logs. </br>
