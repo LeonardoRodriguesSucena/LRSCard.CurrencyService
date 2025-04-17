@@ -15,8 +15,8 @@ For ease of setup and testing, the necessary configuration files are included in
 Return the current exchange rate for the desired baseCurrency. 
 This information must be the most updated, so there is no cache involved in this operation.
 
-**Endpoint**: Get: `http://localhost:8080/api/v1.0/exchange-rates/lastest` </br>
-**Query**: baseCurrency=USD, provider=Frankfurter</br>
+**Endpoint**: GET: `http://localhost:8080/api/v1.0/exchange-rates/lastest` </br>
+**Query**: `baseCurrency=USD, provider=Frankfurter` </br>
 **Response**: 
 ```json
 {
@@ -40,7 +40,7 @@ The ExchangeProvider(Frankfurter) can do the conversion natively, so I am using 
 This could change if additional providers are added in the future.
 For now it is not necessary, so I prefered to keep it simple.</br></br>
 
-**Endpoint**: Post: `http://localhost:8080/api/v1.0/exchange-rates/convert` </br>
+**Endpoint**: POST: `http://localhost:8080/api/v1.0/exchange-rates/convert` </br>
 **Payload**: 
 ```json
 {
@@ -72,8 +72,8 @@ Returns exchange rates for a date range. <br>
 This operation uses caching for past dates to improve performance.
 For today's exchange rates, the cache is not used.</br></br>
 
-**Endpoint**: get: `http://localhost:8080/api/v1.0/exchange-rates/history` <br/>
-**Query**: baseCurrency=USD&initialDate=2024-01-01&endDate=2024-01-30&page=1&pageSize=10&provider=Frankfurter
+**Endpoint**: GET: `http://localhost:8080/api/v1.0/exchange-rates/history` <br/>
+**Query**: `baseCurrency=USD&initialDate=2024-01-01&endDate=2024-01-30&page=1&pageSize=10&provider=Frankfurter`
 
 Response:
 ```json
@@ -102,32 +102,32 @@ Response:
 
 ## 🚀 Features
 
-- ✅ Factory-based currency provider selection</br>  
+- ✅ **Factory-based currency provider selection**</br>  
   - the desired currency provider is injected depending on the request information
-- ✅ Redis caching<br>
+- ✅ **Redis caching**<br>
   - enabling multiple service instances to use the same cache source
-- ✅ JWT-based Authentication & RBAC
+- ✅ **JWT-based Authentication & RBAC**
   - all operations are protected by JWT authentication and role-based access control (RBAC). 
-  - To get an valid access token, you need to use the /auth/login endpoint. See more in <b>Setup Instructions</b> below.
-- ✅ API Rate Limiting
+  - To get an valid access token, you need to use the `/auth/login` endpoint. See more in <b>Setup Instructions</b>.
+- ✅**API Rate Limiting**
   - The API is protected by rateLimiting and there are 2 policies totally configurable in config file:<br>
     - `default`: for authenticated user (it is less restrictive)<br>
     - `anonynoys`: for unauthenticated user, for example to use /auth/login endpoint to get the acessToken to use the other operations.<br>
     ⚠️<i>To keep the API simple to use, I am not asking for an <b>API key</b> to enable access to <b>/auth</b> operations, but it should exist in an real-world scenario.</i>
-- ✅ Circuit Breaker & Retry Policies with Exponential Backoff
+- ✅ **Circuit Breaker & Retry Policies with Exponential Backoff**
   - Circuit breaker implemented to avoid overloading the external service (`Frankfurter`) in case of failure.
   - `ExchangeProviderResiliency` parameters are configurable in the `appsettings.json` file for all ExchangeProviders.
-- ✅ Environment-specific configurations
+- ✅ **Environment-specific configurations**
   - Application is configured to run in multiple environments (`Development`, `Staging`, `Production`) using a cfg for each environment.
-- ✅ Horizontal Scaling
+- ✅ **Horizontal Scaling**
   -  API is configured to be horizontally scalable, so you can run multiple instances of the API behind a load balancer.
-- ✅ API versioning
-- ✅ Structured logging using Serilog + Seq and Distributed Tracing
-  - For logging, I am using Serilog with Seq. So It is possible to track the request over all layers using the CorrelationId.<br>
+- ✅ **API versioning**
+- ✅ **Structured logging using Serilog + Seq and Distributed Tracing**
+  - For logging, I am using Serilog with Seq. So It is possible to track the request over all layers using the **CorrelationId**.<br>
   - User information like UserID(Login), SUB, IP, etc... is also injected in the logs. </br>
   Seq server: `http://localhost:5341`
-- ✅ Unit & Integration Tests implemented with `XUnit` and `Moq`.
-- ✅ Swagger documentation with JWT auth.
+- ✅ **Unit & Integration Tests implemented with `XUnit` and `Moq`**
+- ✅ **Swagger documentation with JWT auth**
 
 ---
 
@@ -158,19 +158,27 @@ The API will be acessible in:<br>
 <br>
 <a href="http://localhost:8080/api/v1.0/exchange-rates/latest" target="_blank">http://localhost:8080/api/v1.0/exchange-rates/latest </a> --example with latest operation 
 
-To access the API operations, you need to get the AccessToken using the auth/login endpoint. <br>
-You can use any login and password, it will return the AccessToken with admin role.<br>
-Post: http://localhost:8080/api/v1.0/auth/login <br>
+## 🔐 Authentication
 
+To access the API operations, you need to get the `AccessToken` using the `v1/auth/login` endpoint. <br>
+You can use any login and password, it will return the AccessToken with admin role.<br><br>
+**Endpoint**: POST:  `http://localhost:8080/api/v1.0/auth/login` <br>
+**Payload:**
 ```json
 {
   "login": "leonardo.sucena",
   "password": "pwd123"
 }
 ```
-<br/>
-Now with the AccessToken, you can use the other operations. </br>
-Just add it in the request header "Authorization" with value "bearer <b>ADD_YOUR_TOKEN_HERE</b>"
+
+### 🔑 Using the Access Token ###
+Now with the `AccessToken` you can use all protected endpoints.</br>
+Just include it in the request Header as a Bearer token.<br>
+
+**Header**
+```javascript
+Authorization: Bearer ADD_YOUR_TOKEN_HERE
+```
 
 
 
