@@ -1,6 +1,7 @@
 ﻿using LRSCard.CurrencyService.API.DTOs.Common;
 using LRSCard.CurrencyService.API.DTOs.Requests;
 using LRSCard.CurrencyService.API.DTOs.Responses;
+using LRSCard.CurrencyService.Application.Common;
 using LRSCard.CurrencyService.Application.Interfaces;
 using LRSCard.CurrencyService.Application.Requests;
 using Microsoft.AspNetCore.Authorization;
@@ -33,7 +34,12 @@ namespace LRSCard.CurrencyService.API.Controllers
         public async Task<IActionResult> GetLatest([FromQuery] GetLastestCurrencyRequestDTO request)
         {
             try {
-                var response = await _currencyExchangeRateService.GetExchangeRate(new GetExchangeRateRequest { BaseCurrency = request.BaseCurrency });
+                var response = await _currencyExchangeRateService.GetExchangeRate(
+                    new GetExchangeRateRequest { 
+                           BaseCurrency = request.BaseCurrency,
+                           CurrencyProvider = mapToCurrencyProviderType(request.Provider)
+                    });
+
                 CurrencyRatesDTO dto = new CurrencyRatesDTO
                 {
                     Amount = response.Amount,
@@ -70,7 +76,8 @@ namespace LRSCard.CurrencyService.API.Controllers
                     {
                         Page = request.Page,
                         PageSize = request.PageSize
-                    }
+                    },
+                    CurrencyProvider = mapToCurrencyProviderType(request.Provider)
                 };
 
                 var serviceResponse = await _currencyExchangeRateService.GetHistoricalExchangeRatePaginated(serviceRequest);
@@ -111,7 +118,8 @@ namespace LRSCard.CurrencyService.API.Controllers
                 {
                     Amount = request.Amount,
                     BaseCurrency = request.BaseCurrency,
-                    Symbols = request.DestinationCurrencies
+                    Symbols = request.DestinationCurrencies,
+                    CurrencyProvider = mapToCurrencyProviderType(request.Provider)
                 };
                 var response = await _currencyExchangeRateService.GetCurrencyConvertion(serviceRequest);
 
@@ -133,6 +141,19 @@ namespace LRSCard.CurrencyService.API.Controllers
             }            
         }
 
+        private CurrencyProviderType mapToCurrencyProviderType(string? provider)
+        {
+            //map the provider received in the DTO to the enum
+            //For now we just have 1 provider Frankfurter, but like this it is prepated for future providers
+
+            if (!string.IsNullOrEmpty(provider) && 
+                Enum.TryParse(provider, true, out CurrencyProviderType providerType)
+               )
+                return providerType;
+
+            return CurrencyProviderType.Frankfurter;
+
+        }
 
     }
 }

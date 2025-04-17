@@ -10,5 +10,12 @@ namespace LRSCard.CurrencyService.API.DTOs.Requests
         /// <example>USD</example>
         [FromQuery(Name = "baseCurrency")]
         public string BaseCurrency { get; set; }
+
+        /// <summary>
+        /// Currency provider
+        /// </summary>
+        /// <example>Frankfurter</example>
+        [FromQuery(Name = "provider")]
+        public string? Provider { get; set; }
     }
 }

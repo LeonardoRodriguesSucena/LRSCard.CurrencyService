@@ -38,5 +38,12 @@ namespace LRSCard.CurrencyService.API.DTOs.Requests
         ///<example>10</example>
         [FromQuery(Name = "pageSize")]
         public int PageSize { get; set; } = 10;
+
+        /// <summary>
+        /// Currency provider
+        /// </summary>
+        /// <example>Frankfurter</example>
+        [FromQuery(Name = "provider")]
+        public string? Provider { get; set; }
     }
 }

@@ -25,5 +25,12 @@ namespace LRSCard.CurrencyService.API.DTOs.Requests
         /// </summary>
         /// <example>["EUR","CAD"]</example>
         public List<string> DestinationCurrencies { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Currency provider
+        /// </summary>
+        /// <example>Frankfurter</example>
+        [FromQuery(Name = "provider")]
+        public string? Provider { get; set; }
     }
 }
