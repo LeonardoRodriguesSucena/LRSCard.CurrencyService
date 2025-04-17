@@ -149,14 +149,13 @@ You can use **Swagger** to test:<br>
          http://localhost:8080/swagger</a><br>    
 
 To check the logs, you can use the **Seq Dashboard**. <br>
-<a href="http://localhost:5341" target="_blank">
-         http://localhost:5341</a><br>
+<a href="http://localhost:5341" target="_blank"> http://localhost:5341</a><br>
 
-The API will be acessible in:<br>
+The API will be accessible in:<br>
 
-<a href="http://localhost:8080/api/v1.0/auth/login" target="_blank"> http://localhost:8080/api/v1.0/auth/login</a>  --example with login operation 
+`http://localhost:8080/api/v1.0/auth/login` 
 <br>
-<a href="http://localhost:8080/api/v1.0/exchange-rates/latest" target="_blank">http://localhost:8080/api/v1.0/exchange-rates/latest </a> --example with latest operation 
+`http://localhost:8080/api/v1.0/exchange-rates/latest`
 
 ## 🔐 Authentication
 
