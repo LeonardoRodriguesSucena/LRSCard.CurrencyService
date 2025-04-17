@@ -16,7 +16,7 @@ Return the current exchange rate for the desired baseCurrency.
 This information must be the most updated, so there is no cache involved in this operation.
 
 **Endpoint**: GET: `http://localhost:8080/api/v1.0/exchange-rates/lastest` </br>
-**Query**: `baseCurrency=USD, provider=Frankfurter` </br>
+**Query**: `baseCurrency=USD&provider=Frankfurter` </br>
 **Response**: 
 ```json
 {
