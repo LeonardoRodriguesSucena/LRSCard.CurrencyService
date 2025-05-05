@@ -43,11 +43,14 @@ jobs:
           context: ./src
           file: ./src/LRSCard.CurrencyService.API/Dockerfile
           push: true
-          tags: ${{ env.ACR_SERVER }}/lrscurrencyserviceapi-${{ env.DATE_TAG }}-${{ env.BUILD_REVISION }}
+          tags: |
+            ${{ env.ACR_SERVER }}/lrscurrencyserviceapi:latest
+            ${{ env.ACR_SERVER }}/lrscurrencyserviceapi:${{ env.DATE_TAG }}-${{ env.BUILD_REVISION }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'lrscard-currencyservice-api'
           slot-name: 'production'
-          images: '${{ env.ACR_SERVER }}/lrscurrencyserviceapi-${{ env.DATE_TAG }}-${{ env.BUILD_REVISION }}'
+          #images: '${{ env.ACR_SERVER }}/lrscurrencyserviceapi-${{ env.DATE_TAG }}-${{ env.BUILD_REVISION }}'
+          images: '${{ env.ACR_SERVER }}/lrscurrencyserviceapi:latest'
