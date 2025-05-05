@@ -12,14 +12,15 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/LRSCard.CurrencyService.API/LRSCard.CurrencyService.API.csproj", "src/LRSCard.CurrencyService.API/"]
-COPY ["src/LRSCard.CurrencyService.Application/LRSCard.CurrencyService.Application.csproj", "src/LRSCard.CurrencyService.Application/"]
-COPY ["src/LRSCard.CurrencyService.Domain/LRSCard.CurrencyService.Domain.csproj", "src/LRSCard.CurrencyService.Domain/"]
-COPY ["src/LRSCard.CurrencyService.Infrastructure/LRSCard.CurrencyService.Infrastructure.csproj", "src/LRSCard.CurrencyService.Infrastructure/"]
-RUN dotnet restore "./src/LRSCard.CurrencyService.API/LRSCard.CurrencyService.API.csproj"
+COPY ["LRSCard.CurrencyService.API/LRSCard.CurrencyService.API.csproj", "LRSCard.CurrencyService.API/"]
+COPY ["LRSCard.CurrencyService.Application/LRSCard.CurrencyService.Application.csproj", "LRSCard.CurrencyService.Application/"]
+COPY ["LRSCard.CurrencyService.Domain/LRSCard.CurrencyService.Domain.csproj", "LRSCard.CurrencyService.Domain/"]
+COPY ["LRSCard.CurrencyService.Infrastructure/LRSCard.CurrencyService.Infrastructure.csproj", "LRSCard.CurrencyService.Infrastructure/"]
+RUN dotnet restore "LRSCard.CurrencyService.API/LRSCard.CurrencyService.API.csproj"
 COPY . .
-WORKDIR "/src/src/LRSCard.CurrencyService.API"
+WORKDIR "/src/LRSCard.CurrencyService.API"
 RUN dotnet build "./LRSCard.CurrencyService.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
