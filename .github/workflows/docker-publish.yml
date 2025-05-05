@@ -1,55 +1,49 @@
-name: Build and Push Docker Image to ACR with Date Tag
+name: Build and Deploy to Azure Container App
 
 on:
   push:
     branches:
       - main
 
-jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
+env:
+  ACR_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
+  RESOURCE_GROUP: lrscard-currencyservice
+  CONTAINER_APP_NAME: lrscard-currencyservice-api
+  IMAGE_NAME: lrscurrencyserviceapi
 
-    env:
-      ACR_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Set environment variables
-        id: vars
-        run: |
-          DATE_TAG=$(date +'%Y%m%d')
-          echo "DATE_TAG=$DATE_TAG" >> $GITHUB_ENV
-          echo "BUILD_REVISION=$(echo $GITHUB_RUN_NUMBER | sed 's/^0*//')" >> $GITHUB_ENV
-          echo "IMAGE_TAG=lrscurrencyserviceapi-${DATE_TAG}-${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
-          echo "IMAGE_TAG=lrscurrencyserviceapi-${DATE_TAG}-${GITHUB_RUN_NUMBER}" >> $GITHUB_OUTPUT
-
-      - name: Log in to ACR
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.ACR_SERVER }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./src
-          file: ./src/LRSCard.CurrencyService.API/Dockerfile
-          push: true
-          tags: |
-            ${{ env.ACR_SERVER }}/lrscurrencyserviceapi:latest
-            ${{ env.ACR_SERVER }}/lrscurrencyserviceapi:${{ env.DATE_TAG }}-${{ env.BUILD_REVISION }}
+      - name: Set version tag
+        id: vars
+        run: |
+          echo "DATE_TAG=$(date +'%Y%m%d')" >> $GITHUB_ENV
+          echo "REV=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
 
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'lrscard-currencyservice-api'
-          slot-name: 'production'
-          images: '${{ env.ACR_SERVER }}/lrscurrencyserviceapi:latest'
+      - name: Docker Login to ACR
+        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t $ACR_SERVER/$IMAGE_NAME:latest ./src
+          docker push $ACR_SERVER/$IMAGE_NAME:latest
+
+      - name: Deploy to Azure Container App
+        run: |
+          az containerapp update \
+            --name $CONTAINER_APP_NAME \
+            --resource-group $RESOURCE_GROUP \
+            --image $ACR_SERVER/$IMAGE_NAME:latest \
+            --registry-server $ACR_SERVER \
+            --registry-username ${{ secrets.ACR_USERNAME }} \
+            --registry-password ${{ secrets.ACR_PASSWORD }}
