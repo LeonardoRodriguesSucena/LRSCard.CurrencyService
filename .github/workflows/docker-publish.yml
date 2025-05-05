@@ -48,6 +48,6 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'lrscardcurrencyservice-api'
+          app-name: 'lrscard-currencyservice-api'
           slot-name: 'production'
           images: '${{ env.ACR_SERVER }}/lrscurrencyserviceapi-${{ env.DATE_TAG }}-${{ env.BUILD_REVISION }}'
