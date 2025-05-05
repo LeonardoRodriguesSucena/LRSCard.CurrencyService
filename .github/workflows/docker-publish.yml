@@ -43,10 +43,7 @@ jobs:
 
       - name: Deploy to Azure Container App
         run: |
-          az containerapp update \
-            --name $CONTAINER_APP_NAME \
-            --resource-group $RESOURCE_GROUP \
-            --image $ACR_SERVER/$IMAGE_NAME:latest \
-            --registry-server $ACR_SERVER \
-            --registry-username ${{ secrets.ACR_USERNAME }} \
-            --registry-password ${{ secrets.ACR_PASSWORD }}
+            az containerapp update \
+              --name lrscard-currencyservice-api \
+              --resource-group lrscard-currencyservice \
+              --image lrscardcurrencyserviceacr-cwf3fpcnfze9akbe.azurecr.io/lrscurrencyserviceapi:latest
