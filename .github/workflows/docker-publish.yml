@@ -35,7 +35,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./src/LRSCard.CurrencyService
+          file: ./src/LRSCard.CurrencyService/Dockerfile
           push: true
           tags: ${{ env.ACR_SERVER }}/lrscurrencyserviceapi-${{ env.DATE_TAG }}-${{ env.BUILD_REVISION }}
 
