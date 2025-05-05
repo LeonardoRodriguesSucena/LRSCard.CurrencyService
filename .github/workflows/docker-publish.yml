@@ -40,7 +40,6 @@ jobs:
           ./src
           docker push $ACR_SERVER/$IMAGE_NAME:latest
 
-
       - name: Deploy to Azure Container App
         run: |
             az containerapp update \
