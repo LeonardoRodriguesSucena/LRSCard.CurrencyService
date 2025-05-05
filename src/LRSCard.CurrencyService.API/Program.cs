@@ -23,8 +23,10 @@ namespace LRSCard.CurrencyService.API
                 .CreateLogger();
 
                 Log.Information("Starting...");
-                
-                builder.Host.UseSerilog();
+
+                //uncomment later
+                if (builder.Configuration.GetSection("Serilog").GetValue<bool>("Enabled"))
+                    builder.Host.UseSerilog();
 
                 builder.Services.AddInfrastructure(builder.Configuration);
                 builder.Services.AddApplication(builder.Configuration);                

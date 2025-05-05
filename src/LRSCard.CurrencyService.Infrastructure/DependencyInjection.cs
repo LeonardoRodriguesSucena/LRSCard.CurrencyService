@@ -12,6 +12,7 @@ using LRSCard.CurrencyService.Infrastructure.Cache;
 using LRSCard.CurrencyService.Application.Common;
 using LRSCard.CurrencyService.Infrastructure.Factories;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace LRSCard.CurrencyService.Infrastructure
 {
@@ -42,12 +43,23 @@ namespace LRSCard.CurrencyService.Infrastructure
             services.AddScoped<ICurrencyProviderFactory, CurrencyProviderFactory>();
 
             //Redis
-            services.AddStackExchangeRedisCache(options =>
+            if (configuration.GetSection("Redis").GetValue<bool>("Enabled"))
             {
-                options.Configuration = configuration["Redis:ConnectionString"] ?? "localhost:6379";
-            });
-            services.Configure<CacheProviderOptions>(configuration.GetSection("CacheProviderOptions"));
-            services.AddSingleton<ICurrencyRateCache, RedisCurrencyRateCache>();
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = configuration["Redis:ConnectionString"] ?? "localhost:6379";
+                });
+
+                services.Configure<CacheProviderOptions>(configuration.GetSection("CacheProviderOptions"));
+                services.AddSingleton<ICurrencyRateCache, RedisCurrencyRateCache>();
+            }
+            else
+            {
+                // Add in-memory caching as a fallback
+                services.AddMemoryCache();
+                services.AddSingleton<ICurrencyRateCache, MemoryCurrencyRateCache>();
+            }
+
 
             return services;
         }
