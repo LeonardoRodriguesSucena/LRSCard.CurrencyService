@@ -29,7 +29,7 @@ jobs:
         run: |
           echo "DATE_TAG=$(date +'%Y%m%d')" >> $GITHUB_ENV
           echo "REV=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
-          echo "TAG=${DATE_TAG}.${REV}" >> $GITHUB_ENV
+          echo "TAG=$(date +'%Y%m%d')-${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
 
       - name: Docker Login to ACR
         run: echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
@@ -37,9 +37,9 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build -f ./src/LRSCard.CurrencyService.API/Dockerfile \
-          -t $ACR_SERVER/$IMAGE_NAME:latest \
-          -t $ACR_SERVER/$IMAGE_NAME:$TAG \
-          ./src
+            -t $ACR_SERVER/$IMAGE_NAME:latest \
+            -t $ACR_SERVER/$IMAGE_NAME:$TAG \
+            ./src
           
           docker push $ACR_SERVER/$IMAGE_NAME:latest
           docker push $ACR_SERVER/$IMAGE_NAME:$TAG
