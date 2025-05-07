@@ -97,7 +97,14 @@ namespace LRSCard.CurrencyService.API
 
                 });
 
+
+
+                // Health Check
+                builder.Services.AddHealthChecks();
+
+
                 var app = builder.Build();
+                app.MapHealthChecks("/healthz");
 
                 // Configure the HTTP request pipeline.
                 if (!app.Environment.IsProduction())
